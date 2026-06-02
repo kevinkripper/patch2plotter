@@ -1,0 +1,902 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Patch2Plotter</title>
+  <script src="https://cdn.jsdelivr.net/npm/@svgdotjs/svg.js@3.2/dist/svg.min.js"></script>
+  <style>
+    :root{--panel:#f7f7f7;--line:#d4d4d4;--muted:#666;--control:#fff;--blue:#0a84ff}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#111;display:grid;grid-template-columns:340px 1fr;min-height:100vh}
+    aside{padding:9px;background:#f4f4f4;border-right:1px solid #ccc;overflow:auto;max-height:100vh}
+    h1{font-size:18px;margin:0 0 5px;line-height:1.1}.title-line{display:flex;align-items:baseline;gap:7px}.title-credit{font-size:11px;font-weight:400;color:#666}.title-credit a{color:#666;text-decoration:underline;text-underline-offset:2px}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:9px;padding:7px 9px;margin:0 0 7px;box-shadow:0 1px 0 rgba(0,0,0,.03)}
+    .section-title{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#444;margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid #e5e5e5;cursor:pointer;list-style:none}.section-title::-webkit-details-marker{display:none}details>.section-title:before{content:'▸';display:inline-block;width:14px;color:#777}details[open]>.section-title:before{content:'▾'}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:6px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.tight-row{align-items:end}.text-top-row{grid-template-columns:1fr 1.35fr;align-items:start}.inline-check{align-self:end;min-height:28px}.zoom-field{margin-top:8px;padding-top:0}.tagline{margin:0 0 18px}.load-panel{margin-top:18px}.preview-zoom-row{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;margin-top:7px;padding-top:0}.preview-zoom-row span{font-size:12px;white-space:nowrap;color:#222}.load-panel input[type="file"]{display:none}.file-display{display:flex;align-items:center;justify-content:center;width:100%;height:29px;padding:5px 7px;border-radius:7px;border:1px solid #aaa;background:#fff;color:#111;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;cursor:default}.curvature-row{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;margin-top:5px}.curvature-row .check{margin:0}.curvature-row input[type="range"]{margin-top:1px}.hatch-top-row{display:grid;grid-template-columns:auto auto 1fr;gap:8px;align-items:end;margin:2px 0 6px}.hatch-top-row .check{margin:0 0 6px}.hatch-top-row .field{margin-bottom:0}.bg-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:end;margin:2px 0 6px}.bg-amount-row{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center}.bg-amount-row span{font-size:12px;white-space:nowrap;color:#222}
+    .field{display:flex;flex-direction:column;gap:3px;margin:0 0 6px;font-size:12px;color:#222;min-width:0}.field span{line-height:1.15}
+    .check{display:flex;align-items:center;gap:7px;margin:5px 0;font-size:12px;line-height:1.2;color:#111}.check input{width:15px;height:15px;margin:0;flex:0 0 auto}
+    input,button,select{font:inherit;padding:5px 7px;border-radius:7px;border:1px solid #aaa;background:var(--control);color:#111;max-width:100%;min-width:0}button{cursor:pointer;background:#e9e9e9;font-size:12px;padding:5px 8px;min-height:28px}button:hover{background:#ddd}
+    input[type="range"]{padding:0;height:22px;width:100%}input[type="color"]{width:100%;height:28px;padding:2px}input[type="number"]{width:100%}
+    .compact{margin-bottom:0}.hint{font-size:12px;color:#555;line-height:1.35;margin:0}.mini{font-size:12px;color:var(--muted)}
+    a{color:#111;text-decoration:underline;text-underline-offset:2px}
+    input:disabled{opacity:.35;cursor:not-allowed}
+    .title-divider{height:1px;background:#d9d9d9;margin:10px 0 12px}.slim-panel{padding:6px 9px}.hidden-zoom{display:none}.credit-panel{background:#fafafa}#svg{padding:18px;overflow:auto;background:#fff;touch-action:none}.hr{height:1px;background:#e2e2e2;margin:12px 0}
+  </style>
+</head>
+<body>
+  <aside>
+    <div class="title-line"><h1>Patch2Plotter</h1><span class="title-credit">by <a href="https://kevinkripper.com" target="_blank" rel="noopener">Kevin Kripper</a></span></div>
+    <p class="hint tagline">Convert Max patches into layered, plotter-friendly SVGs.</p>
+    <div class="title-divider"></div>
+
+    <section class="panel load-panel">
+      <input id="fileInput" type="file" accept=".maxpat,.json" />
+      <div id="fileName" class="file-display">No file chosen</div>
+      <div class="row3" style="margin-top:8px">
+        <button id="read" type="button">↑ Read</button>
+        <button id="reset" type="button">Reset</button>
+        <button id="export" type="button">↓ SVG</button>
+      </div>
+      <div class="preview-zoom-row"><span>Preview zoom</span><input id="previewZoom" type="range" min="25" max="300" step="5" value="100" /></div>
+      <button id="zoomOut" class="hidden-zoom" type="button">Zoom −</button>
+      <button id="zoomIn" class="hidden-zoom" type="button">Zoom +</button>
+    </section>
+
+    <details class="panel" open>
+      <summary class="section-title">Object Outlines</summary>
+      <div class="row tight-row">
+        <label class="field"><span>Color</span><input id="moduleColor" type="color" value="#000000" /></label>
+        <label class="field"><span>Width (mm)</span><input id="moduleWidth" type="number" min="0" step="0.05" value="0.25" /></label>
+      </div>
+    </details>
+
+    <details class="panel" open>
+      <summary class="section-title">Text</summary>
+      <div class="row text-top-row">
+        <div>
+          <label class="check"><input id="showText" type="checkbox" checked /> Show</label>
+          <label class="check"><input id="wrapText" type="checkbox" /> Wrap</label>
+          <label class="check"><input id="forceCaps" type="checkbox" /> Caps</label>
+        </div>
+        <label class="field"><span>Hershey font</span>
+          <select id="hersheyFont">
+            <option value="sans1">Hershey Sans 1-stroke</option>
+            <option value="sansMedium">Hershey Sans medium</option>
+            <option value="serifMedium">Hershey Serif medium</option>
+            <option value="serifMediumItalic">Hershey Serif medium italic</option>
+            <option value="serifBold">Hershey Serif bold</option>
+            <option value="serifBoldItalic">Hershey Serif bold italic</option>
+            <option value="script1">Hershey Script 1-stroke</option>
+            <option value="scriptMedium">Hershey Script medium</option>
+            <option value="gothicEnglish">Hershey Gothic English</option>
+            <option value="emsAllure">EMS Allure</option>
+            <option value="emsElfin">EMS Elfin</option>
+            <option value="emsFelix">EMS Felix</option>
+            <option value="emsNixish">EMS Nixish</option>
+            <option value="emsNixishItalic">EMS Nixish Italic</option>
+            <option value="emsOsmotron">EMS Osmotron</option>
+            <option value="emsReadability">EMS Readability</option>
+            <option value="emsReadabilityItalic">EMS Readability Italic</option>
+            <option value="emsTech" selected>EMS Tech</option>
+          </select>
+        </label>
+      </div>
+      <div class="row3 tight-row">
+        <label class="field"><span>Size</span><input id="textSize" type="number" min="4" step="1" value="9" /></label>
+        <label class="field"><span>Width (mm)</span><input id="textWidth" type="number" min="0.05" step="0.05" value="0.25" /></label>
+        <label class="field"><span>Color</span><input id="textColor" type="color" value="#000000" /></label>
+      </div>
+    </details>
+
+    <details class="panel" open>
+      <summary class="section-title">Patchcoords</summary>
+      <div class="row tight-row">
+        <label class="field"><span>Color</span><input id="cableColor" type="color" value="#000000" /></label>
+        <label class="field"><span>Width (mm)</span><input id="cableWidth" type="number" min="0.05" step="0.05" value="0.5" /></label>
+      </div>
+      <div class="curvature-row">
+        <label class="check"><input id="curvy" type="checkbox" checked /> Curve</label>
+        <input id="curvature" type="range" min="0" max="50" step="1" value="35" />
+      </div>
+      <label class="check"><input id="autoDashPatchcoords" type="checkbox" /> Dashes</label>
+    </details>
+
+    <details class="panel">
+      <summary class="section-title">Background Pattern</summary>
+      <div class="bg-row">
+        <label class="field compact"><span>Pattern</span>
+          <select id="bgMode">
+            <option value="none" selected>None</option>
+            <option value="dots">Dots</option>
+            <option value="grid">Grid</option>
+          </select>
+        </label>
+        <label class="field compact"><span>Color</span><input id="bgColor" type="color" value="#b8b8b8" /></label>
+      </div>
+      <div class="bg-amount-row">
+        <span>Amount</span>
+        <input id="bgAmount" type="range" min="12" max="80" step="1" value="80" />
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary class="section-title">Empty Object Hatching</summary>
+      <div class="hatch-top-row">
+        <label class="check"><input id="emptyObjectHatch" type="checkbox" /> Enable</label>
+        <label class="check"><input id="hatchCross" type="checkbox" /> Crosshatch</label>
+        <label class="field"><span>Angle</span><input id="hatchAngle" type="number" min="0" max="180" step="1" value="45" /></label>
+      </div>
+      <div class="row3 tight-row">
+        <label class="field"><span>Color</span><input id="hatchColor" type="color" value="#000000" /></label>
+        <label class="field"><span>Width (mm)</span><input id="hatchWidth" type="number" min="0.05" step="0.05" value="0.25" /></label>
+        <label class="field"><span>Spacing</span><input id="hatchSpacing" type="number" min="1" step="1" value="4" /></label>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary class="section-title">Object Label Hatching</summary>
+      <div class="hatch-top-row">
+        <label class="check"><input id="bandHatch" type="checkbox" /> Enable</label>
+        <label class="check"><input id="bandHatchCross" type="checkbox" /> Crosshatch</label>
+        <label class="field"><span>Angle</span><input id="bandHatchAngle" type="number" min="0" max="180" step="1" value="45" /></label>
+      </div>
+      <div class="row3 tight-row">
+        <label class="field"><span>Color</span><input id="bandHatchColor" type="color" value="#000000" /></label>
+        <label class="field"><span>Width (mm)</span><input id="bandHatchWidth" type="number" min="0.05" step="0.05" value="0.25" /></label>
+        <label class="field"><span>Spacing</span><input id="bandHatchSpacing" type="number" min="1" step="1" value="4" /></label>
+      </div>
+    </details>
+  </aside>
+  <main id="svg"></main>
+<script>
+function lerp(a,b,t){return a+t*(b-a)}
+function strokeWidthMM(v){ return `${Number(v) || 0}mm`; }
+let draw=null, patch=null;
+
+// Compact monoline vector alphabet. Coordinates are in a 0..6 x 0..8 box.
+// This behaves like a Hershey/stroke font for plotting: strokes only, no filled outlines.
+const HERSHEY = {
+  'A':[[[0,8],[3,0],[6,8]],[[1,5],[5,5]]], 'B':[[[0,0],[0,8]],[[0,0],[4,0],[6,2],[4,4],[0,4]],[[0,4],[4,4],[6,6],[4,8],[0,8]]],
+  'C':[[[6,1],[5,0],[1,0],[0,1],[0,7],[1,8],[5,8],[6,7]]], 'D':[[[0,0],[0,8]],[[0,0],[4,0],[6,2],[6,6],[4,8],[0,8]]],
+  'E':[[[6,0],[0,0],[0,8],[6,8]],[[0,4],[4,4]]], 'F':[[[0,8],[0,0],[6,0]],[[0,4],[4,4]]],
+  'G':[[[6,1],[5,0],[1,0],[0,1],[0,7],[1,8],[5,8],[6,7],[6,5],[3,5]]], 'H':[[[0,0],[0,8]],[[6,0],[6,8]],[[0,4],[6,4]]],
+  'I':[[[0,0],[6,0]],[[3,0],[3,8]],[[0,8],[6,8]]], 'J':[[[6,0],[6,7],[5,8],[1,8],[0,7]]],
+  'K':[[[0,0],[0,8]],[[6,0],[0,4],[6,8]]], 'L':[[[0,0],[0,8],[6,8]]],
+  'M':[[[0,8],[0,0],[3,4],[6,0],[6,8]]], 'N':[[[0,8],[0,0],[6,8],[6,0]]],
+  'O':[[[1,0],[5,0],[6,1],[6,7],[5,8],[1,8],[0,7],[0,1],[1,0]]], 'P':[[[0,8],[0,0],[4,0],[6,2],[4,4],[0,4]]],
+  'Q':[[[1,0],[5,0],[6,1],[6,7],[5,8],[1,8],[0,7],[0,1],[1,0]],[[4,6],[6,8]]], 'R':[[[0,8],[0,0],[4,0],[6,2],[4,4],[0,4]],[[3,4],[6,8]]],
+  'S':[[[6,1],[5,0],[1,0],[0,1],[0,3],[1,4],[5,4],[6,5],[6,7],[5,8],[1,8],[0,7]]], 'T':[[[0,0],[6,0]],[[3,0],[3,8]]],
+  'U':[[[0,0],[0,7],[1,8],[5,8],[6,7],[6,0]]], 'V':[[[0,0],[3,8],[6,0]]],
+  'W':[[[0,0],[1,8],[3,4],[5,8],[6,0]]], 'X':[[[0,0],[6,8]],[[6,0],[0,8]]],
+  'Y':[[[0,0],[3,4],[6,0]],[[3,4],[3,8]]], 'Z':[[[0,0],[6,0],[0,8],[6,8]]],
+  '0':[[[1,0],[5,0],[6,1],[6,7],[5,8],[1,8],[0,7],[0,1],[1,0]],[[1,7],[5,1]]], '1':[[[2,2],[3,0],[3,8]],[[1,8],[5,8]]],
+  '2':[[[0,2],[0,1],[1,0],[5,0],[6,1],[6,3],[0,8],[6,8]]], '3':[[[0,1],[1,0],[5,0],[6,1],[6,3],[4,4],[6,5],[6,7],[5,8],[1,8],[0,7]]],
+  '4':[[[5,8],[5,0]],[[0,5],[6,5]],[[0,5],[5,0]]], '5':[[[6,0],[1,0],[0,4],[5,4],[6,5],[6,7],[5,8],[1,8],[0,7]]],
+  '6':[[[6,1],[5,0],[1,0],[0,1],[0,7],[1,8],[5,8],[6,7],[6,5],[5,4],[0,4]]], '7':[[[0,0],[6,0],[2,8]]],
+  '8':[[[1,0],[5,0],[6,1],[6,3],[5,4],[1,4],[0,3],[0,1],[1,0]],[[1,4],[5,4],[6,5],[6,7],[5,8],[1,8],[0,7],[0,5],[1,4]]],
+  '9':[[[6,4],[1,4],[0,3],[0,1],[1,0],[5,0],[6,1],[6,7],[5,8],[1,8],[0,7]]],
+  '.':[[[3,8],[3.1,8]]], ',':[[[3,7],[2,9]]], ':':[[[3,2],[3.1,2]],[[3,6],[3.1,6]]], ';':[[[3,2],[3.1,2]],[[3,6],[2,9]]],
+  '-':[[[1,4],[5,4]]], '_':[[[0,8],[6,8]]], '+':[[[1,4],[5,4]],[[3,2],[3,6]]], '*':[[[0,4],[6,4]],[[1,1],[5,7]],[[5,1],[1,7]]],
+  '/':[[[0,8],[6,0]]], '\\':[[[0,0],[6,8]]], '=':[[[0,3],[6,3]],[[0,5],[6,5]]], '<':[[[6,1],[0,4],[6,7]]], '>':[[[0,1],[6,4],[0,7]]],
+  '(':[[[4,0],[2,2],[2,6],[4,8]]], ')':[[[2,0],[4,2],[4,6],[2,8]]], '[':[[[5,0],[2,0],[2,8],[5,8]]], ']':[[[1,0],[4,0],[4,8],[1,8]]],
+  '{':[[[5,0],[3,1],[3,3],[1,4],[3,5],[3,7],[5,8]]], '}':[[[1,0],[3,1],[3,3],[5,4],[3,5],[3,7],[1,8]]],
+  '!':[[[3,0],[3,6]],[[3,8],[3.1,8]]], '?':[[[0,2],[0,1],[1,0],[5,0],[6,1],[6,3],[3,5],[3,6]],[[3,8],[3.1,8]]],
+  '"':[[[2,0],[2,2]],[[4,0],[4,2]]], "'": [[[3,0],[3,2]]], '`':[[[2,0],[4,2]]], '~':[[[0,5],[2,3],[4,5],[6,3]]],
+  '#':[[[1,0],[1,8]],[[5,0],[5,8]],[[0,3],[6,3]],[[0,6],[6,6]]], '%':[[[0,8],[6,0]],[[1,0],[2,1],[1,2],[0,1],[1,0]],[[5,6],[6,7],[5,8],[4,7],[5,6]]],
+  '&':[[[6,8],[1,3],[1,1],[2,0],[4,0],[5,1],[5,3],[0,8],[6,8]]], '@':[[[6,6],[5,8],[1,8],[0,7],[0,1],[1,0],[5,0],[6,1],[6,4],[4,5],[2,4],[2,2],[4,2],[4,5]]],
+  ' ' : []
+};
+
+const HERSHEY_LOWER = {
+  'a':[[[1,4],[5,4],[6,5],[6,8]],[[6,5],[5,4],[2,4],[1,5],[1,7],[2,8],[5,8],[6,7]]],
+  'b':[[[1,1],[1,8]],[[1,5],[2,4],[5,4],[6,5],[6,7],[5,8],[2,8],[1,7]]],
+  'c':[[[6,5],[5,4],[2,4],[1,5],[1,7],[2,8],[5,8],[6,7]]],
+  'd':[[[6,1],[6,8]],[[6,5],[5,4],[2,4],[1,5],[1,7],[2,8],[5,8],[6,7]]],
+  'e':[[[1,6],[6,6],[6,5],[5,4],[2,4],[1,5],[1,7],[2,8],[5,8],[6,7]]],
+  'f':[[[5,1],[4,1],[3,2],[3,8]],[[1,4],[5,4]]],
+  'g':[[[6,4],[6,9],[5,10],[2,10],[1,9]],[[6,5],[5,4],[2,4],[1,5],[1,7],[2,8],[5,8],[6,7]]],
+  'h':[[[1,1],[1,8]],[[1,5],[2,4],[5,4],[6,5],[6,8]]],
+  'i':[[[3,4],[3,8]],[[3,2],[3.1,2]]],
+  'j':[[[4,4],[4,9],[3,10],[1,10]],[[4,2],[4.1,2]]],
+  'k':[[[1,1],[1,8]],[[6,4],[1,6],[6,8]]],
+  'l':[[[3,1],[3,8]]],
+  'm':[[[0,8],[0,4],[2,4],[3,5],[3,8]],[[3,5],[4,4],[6,4],[6,8]]],
+  'n':[[[1,8],[1,4],[2,4],[5,4],[6,5],[6,8]]],
+  'o':[[[2,4],[5,4],[6,5],[6,7],[5,8],[2,8],[1,7],[1,5],[2,4]]],
+  'p':[[[1,10],[1,4]],[[1,5],[2,4],[5,4],[6,5],[6,7],[5,8],[2,8],[1,7]]],
+  'q':[[[6,10],[6,4]],[[6,5],[5,4],[2,4],[1,5],[1,7],[2,8],[5,8],[6,7]]],
+  'r':[[[1,8],[1,4],[2,4],[5,4],[6,5]]],
+  's':[[[6,5],[5,4],[2,4],[1,5],[2,6],[5,6],[6,7],[5,8],[2,8],[1,7]]],
+  't':[[[3,2],[3,7],[4,8],[6,8]],[[1,4],[5,4]]],
+  'u':[[[1,4],[1,7],[2,8],[5,8],[6,7],[6,4]]],
+  'v':[[[1,4],[3.5,8],[6,4]]],
+  'w':[[[0,4],[1.5,8],[3,5],[4.5,8],[6,4]]],
+  'x':[[[1,4],[6,8]],[[6,4],[1,8]]],
+  'y':[[[1,4],[3.5,8],[6,4]],[[3.5,8],[2,10]]],
+  'z':[[[1,4],[6,4],[1,8],[6,8]]]
+};
+function glyphFor(ch){ return HERSHEY[ch] || HERSHEY_LOWER[ch] || HERSHEY[ch.toUpperCase()] || [[[0,0],[6,0],[6,8],[0,8],[0,0]],[[0,0],[6,8]]]; }
+function fontParams(name){
+  // These are plotter-style approximations of common Hershey/EMS families,
+  // using the embedded monoline alphabet plus scale/slant/duplicate variations.
+  const table={
+    sans1:{xScale:1, slant:0, spacing:1, duplicate:0, yWave:0},
+    sansMedium:{xScale:1.04, slant:0, spacing:1.05, duplicate:0.26, yWave:0},
+    serifMedium:{xScale:1.02, slant:0, spacing:1.08, duplicate:0.18, yWave:0, serif:true},
+    serifMediumItalic:{xScale:1.02, slant:0.25, spacing:1.08, duplicate:0.18, yWave:0, serif:true},
+    serifBold:{xScale:1.08, slant:0, spacing:1.12, duplicate:0.52, yWave:0, serif:true},
+    serifBoldItalic:{xScale:1.08, slant:0.28, spacing:1.12, duplicate:0.52, yWave:0, serif:true},
+    script1:{xScale:1.05, slant:0.34, spacing:1.02, duplicate:0, yWave:0.55},
+    scriptMedium:{xScale:1.07, slant:0.35, spacing:1.04, duplicate:0.22, yWave:0.65},
+    gothicEnglish:{xScale:1.12, slant:0, spacing:1.15, duplicate:0.38, yWave:0, angular:true},
+    emsAllure:{xScale:1.12, slant:0.24, spacing:1.08, duplicate:0, yWave:0.9},
+    emsElfin:{xScale:0.72, slant:0, spacing:0.78, duplicate:0, yWave:0},
+    emsFelix:{xScale:1.18, slant:0, spacing:1.2, duplicate:0.28, yWave:0.2},
+    emsNixish:{xScale:0.92, slant:0, spacing:0.96, duplicate:0.18, yWave:0},
+    emsNixishItalic:{xScale:0.92, slant:0.25, spacing:0.96, duplicate:0.18, yWave:0},
+    emsOsmotron:{xScale:1.22, slant:0, spacing:1.22, duplicate:0, yWave:0},
+    emsReadability:{xScale:1, slant:0, spacing:1.04, duplicate:0.08, yWave:0},
+    emsReadabilityItalic:{xScale:1, slant:0.22, spacing:1.04, duplicate:0.08, yWave:0},
+    emsTech:{xScale:0.82, slant:0, spacing:0.88, duplicate:0, yWave:0},
+    // backwards compatibility with previous menu values
+    simplex:{xScale:1, slant:0, spacing:1, duplicate:0, yWave:0},
+    duplex:{xScale:1, slant:0, spacing:1.05, duplicate:0.32, yWave:0},
+    triplex:{xScale:1.08, slant:0, spacing:1.12, duplicate:0.5, yWave:0},
+    script:{xScale:1.05, slant:0.33, spacing:1.02, duplicate:0, yWave:0.55},
+    italic:{xScale:1, slant:0.28, spacing:1.04, duplicate:0, yWave:0},
+    condensed:{xScale:0.68, slant:0, spacing:0.72, duplicate:0, yWave:0},
+    expanded:{xScale:1.45, slant:0, spacing:1.45, duplicate:0, yWave:0}
+  };
+  return table[name] || table.sans1;
+}
+function transformPoint(p, fp, size){
+  // p is in 0..6 x 0..8 glyph units. Slant pivots around baseline-ish center.
+  const wave = fp.yWave ? Math.sin((p[0]/6)*Math.PI)*fp.yWave : 0;
+  return [p[0]*fp.xScale + (8-p[1])*fp.slant, p[1] + wave];
+}
+function drawStrokeText(group, str, x, y, size, color, width, fontName='simplex'){
+  const fp=fontParams(fontName);
+  const scale=size/8, letterW=7*scale*fp.spacing, lineH=10*scale;
+  let cx=x, cy=y;
+  String(str||'').split('').forEach(ch=>{
+    if(ch==='\n'){cx=x; cy+=lineH; return;}
+    const glyph=glyphFor(ch);
+    const passes = fp.duplicate ? [0, fp.duplicate] : [0];
+    passes.forEach(offset=>{
+      glyph.forEach(poly=>{
+        if(poly.length<2) return;
+        const d=poly.map((p,i)=>{
+          const q=transformPoint(p,fp,size);
+          return `${i?'L':'M'}${cx+(q[0]+offset)*scale} ${cy+q[1]*scale}`;
+        }).join(' ');
+        group.path(d).fill('none').stroke({color,width:strokeWidthMM(width),linecap:'round',linejoin:'round'});
+      });
+    });
+    cx+= ch===' ' ? letterW*0.65 : letterW;
+  });
+}
+
+function estimateStrokeTextWidth(str, size, fontName='simplex') {
+  const fp = fontParams(fontName);
+  const scale = size / 8;
+  const letterW = 7 * scale * fp.spacing;
+  let maxW = 0, lineW = 0;
+  String(str || '').split('').forEach(ch => {
+    if (ch === '\n') { maxW = Math.max(maxW, lineW); lineW = 0; return; }
+    lineW += ch === ' ' ? letterW * 0.65 : letterW;
+  });
+  return Math.max(maxW, lineW);
+}
+function estimateStrokeTextHeight(str, size) {
+  const scale = size / 8;
+  const lineH = 12 * scale;
+  return Math.max(size, String(str || '').split('\n').length * lineH);
+}
+function rawBoxLabel(box) {
+  if (box.maxclass === 'number' || box.maxclass === 'flonum') return '';
+  return box.text || '';
+}
+function prepareLabel(label, o) {
+  label = String(label || '');
+  return o.forceCaps ? label.toUpperCase() : label;
+}
+function wrapTextToWidth(label, maxWidth, size, fontName) {
+  label = String(label || '').replace(/\s+/g, ' ').trim();
+  if (!label) return '';
+
+  // Slightly relaxed width so Hershey text does not wrap too early.
+  maxWidth *= 1.12;
+
+  // Prefer Max-ish attribute breaks: keep @attr value pairs together when possible.
+  const parts = label.split(/\s+(?=@)/g);
+  const chunks = [];
+  parts.forEach(part => {
+    const words = part.split(/\s+/g).filter(Boolean);
+    if (!words.length) return;
+    if (words[0].startsWith('@')) {
+      chunks.push(words.join(' '));
+    } else {
+      chunks.push(...words);
+    }
+  });
+
+  const lines = [];
+  let line = '';
+
+  chunks.forEach(tok => {
+    const test = line ? line + ' ' + tok : tok;
+
+    if (line && estimateStrokeTextWidth(test, size, fontName) > maxWidth) {
+      // If the current line has comma-separated phrases, backtrack to the last comma.
+      // This avoids ugly wraps like "op 4, sssss, a" / "osa".
+      const commaBreak = line.lastIndexOf(', ');
+      if (commaBreak > 0) {
+        const before = line.slice(0, commaBreak + 1).trim();
+        const after = line.slice(commaBreak + 2).trim();
+        if (before) lines.push(before);
+        line = after ? after + ' ' + tok : tok;
+      } else {
+        lines.push(line);
+        line = tok;
+      }
+    } else {
+      line = test;
+    }
+  });
+
+  if (line) lines.push(line);
+  return lines.join('\n');
+}
+function labelForBox(box, r, o) {
+  let label = prepareLabel(rawBoxLabel(box), o);
+  if (!label) return '';
+  const textOffset = (box.maxclass === 'number' || box.maxclass === 'flonum') ? 14 : 4;
+  const maxWidth = Math.max(20, r[2] - textOffset - 2);
+  if (o.wrapText) label = wrapTextToWidth(label, maxWidth, o.textSize, o.hersheyFont);
+  return label;
+}
+function expandedRectForText(box, r, o) {
+  const label = labelForBox(box, r, o);
+  if (!o.expandTextBoxes || !label || box.maxclass === 'comment') return r;
+  const textOffset = (box.maxclass === 'number' || box.maxclass === 'flonum') ? 14 : 4;
+  const lines = label.split('\n');
+  const neededW = textOffset + Math.max(...lines.map(line => estimateStrokeTextWidth(line, o.textSize, o.hersheyFont))) + 8;
+  const neededH = estimateStrokeTextHeight(label, o.textSize) + 12;
+  return [r[0], r[1], Math.max(r[2], neededW), Math.max(r[3], neededH)];
+}
+function applyPreviewZoom(){
+  const main=document.querySelector('#svg');
+  const z=(parseFloat(document.querySelector('#previewZoom')?.value)||100)/100;
+  if(main.firstElementChild){
+    main.firstElementChild.style.transformOrigin='0 0';
+    main.firstElementChild.style.transform=`scale(${z})`;
+  }
+}
+
+function outletX(box, outletIndex, rect=null){
+  const r = rect || box.patching_rect;
+  const arcSize=7, w=r[2];
+  if((box.numoutlets||1)<=1 || outletIndex===0) return r[0]+arcSize/2+5;
+  if(outletIndex===box.numoutlets-1) return r[0]+arcSize/2+w-arcSize-5;
+  return r[0]+arcSize/2+lerp(5,w-arcSize-5,outletIndex/(box.numoutlets-1));
+}
+function inletX(box, inletIndex, rect=null){
+  const r = rect || box.patching_rect;
+  const arcSize=7, w=r[2];
+  if((box.numinlets||1)<=1 || inletIndex===0) return r[0]+arcSize/2+5;
+  if(inletIndex===box.numinlets-1) return r[0]+arcSize/2+w-arcSize-5;
+  return r[0]+arcSize/2+lerp(5,w-arcSize-5,inletIndex/(box.numinlets-1));
+}
+function opts(){
+  return {
+    curvy:document.querySelector('#curvy').checked,
+    curvature:parseFloat(document.querySelector('#curvature').value)||0,
+    showText:document.querySelector('#showText').checked,
+    wrapText:document.querySelector('#wrapText').checked,
+    forceCaps:document.querySelector('#forceCaps').checked,
+    expandTextBoxes:true,
+    textSize:parseFloat(document.querySelector('#textSize').value)||12,
+    hersheyFont:document.querySelector('#hersheyFont').value,
+    moduleColor:document.querySelector('#moduleColor').value,
+    moduleWidth:parseFloat(document.querySelector('#moduleWidth').value)||0.25,
+    emptyObjectHatch:document.querySelector('#emptyObjectHatch').checked,
+    hatchColor:document.querySelector('#hatchColor').value,
+    hatchWidth:parseFloat(document.querySelector('#hatchWidth').value)||0.25,
+    hatchSpacing:parseFloat(document.querySelector('#hatchSpacing').value)||4,
+    hatchAngle:parseFloat(document.querySelector('#hatchAngle').value)||45,
+    hatchCross:document.querySelector('#hatchCross').checked,
+    bandHatch:document.querySelector('#bandHatch').checked,
+    bandHatchColor:document.querySelector('#bandHatchColor').value,
+    bandHatchWidth:parseFloat(document.querySelector('#bandHatchWidth').value)||0.25,
+    bandHatchSpacing:parseFloat(document.querySelector('#bandHatchSpacing').value)||4,
+    bandHatchAngle:parseFloat(document.querySelector('#bandHatchAngle').value)||45,
+    bandHatchCross:document.querySelector('#bandHatchCross').checked,
+    cableColor:document.querySelector('#cableColor').value,
+    cableWidth:parseFloat(document.querySelector('#cableWidth').value)||0.5,
+    autoDashPatchcoords:document.querySelector('#autoDashPatchcoords').checked,
+    bgMode:document.querySelector('#bgMode').value,
+    bgColor:document.querySelector('#bgColor').value,
+    bgAmount:parseFloat(document.querySelector('#bgAmount').value)||30,
+    textColor:document.querySelector('#textColor').value,
+    textWidth:parseFloat(document.querySelector('#textWidth').value)||0.25
+  };
+}
+function getPatchBounds(patch){
+  let minX=0,minY=0,maxX=patch.rect?.[2]||1200,maxY=patch.rect?.[3]||800;
+  (patch.boxes||[]).forEach(Box=>{
+    const box=Box.box, r=box.patching_rect||[0,0,80,20], o=opts();
+    const er=expandedRectForText(box,r,o);
+    minX=Math.min(minX,er[0]); minY=Math.min(minY,er[1]);
+    maxX=Math.max(maxX,er[0]+er[2]); maxY=Math.max(maxY,er[1]+er[3]);
+    const label=labelForBox(box,r,o);
+    if(label && o.showText){
+      const off=box.maxclass==='number'?14:4;
+      const lines=label.split('\n');
+      maxX=Math.max(maxX,r[0]+off+Math.max(...lines.map(line=>estimateStrokeTextWidth(line,o.textSize,o.hersheyFont)))+8);
+      maxY=Math.max(maxY,r[1]+estimateStrokeTextHeight(label,o.textSize)+6);
+    }
+  });
+  return {minX:minX-20,minY:minY-20,width:maxX-minX+40,height:maxY-minY+40};
+}
+
+function clipLineToRect(cx, cy, dx, dy, r) {
+  const x0 = r[0], y0 = r[1], x1 = r[0] + r[2], y1 = r[1] + r[3];
+  const pts = [];
+  if (Math.abs(dx) > 1e-6) {
+    let t = (x0 - cx) / dx, y = cy + t * dy; if (y >= y0 && y <= y1) pts.push([x0, y]);
+    t = (x1 - cx) / dx; y = cy + t * dy; if (y >= y0 && y <= y1) pts.push([x1, y]);
+  }
+  if (Math.abs(dy) > 1e-6) {
+    let t = (y0 - cy) / dy, x = cx + t * dx; if (x >= x0 && x <= x1) pts.push([x, y0]);
+    t = (y1 - cy) / dy; x = cx + t * dx; if (x >= x0 && x <= x1) pts.push([x, y1]);
+  }
+  const unique = [];
+  pts.forEach(p => { if (!unique.some(q => Math.hypot(q[0]-p[0], q[1]-p[1]) < 0.01)) unique.push(p); });
+  if (unique.length < 2) return null;
+  return [unique[0], unique[1]];
+}
+function drawHatchingAtAngle(group, r, o, angleDegrees) {
+  const spacing = Math.max(1, o.hatchSpacing);
+  const angle = (angleDegrees || 0) * Math.PI / 180;
+  const dx = Math.cos(angle), dy = Math.sin(angle);
+  const nx = -dy, ny = dx;
+  const cx = r[0] + r[2] / 2, cy = r[1] + r[3] / 2;
+  const diag = Math.hypot(r[2], r[3]) + spacing * 2;
+  for (let d = -diag; d <= diag; d += spacing) {
+    const lx = cx + nx * d, ly = cy + ny * d;
+    const seg = clipLineToRect(lx, ly, dx, dy, r);
+    if (seg) group.line(seg[0][0], seg[0][1], seg[1][0], seg[1][1]).stroke({width:strokeWidthMM(o.hatchWidth), color:o.hatchColor, linecap:'butt'});
+  }
+}
+function drawHatching(group, r, o) {
+  drawHatchingAtAngle(group, r, o, o.hatchAngle);
+  if (o.hatchCross) drawHatchingAtAngle(group, r, o, (o.hatchAngle + 90) % 180);
+}
+function drawBandHatching(group, r, o) {
+  const bo = Object.assign({}, o, {
+    hatchColor: o.bandHatchColor,
+    hatchWidth: o.bandHatchWidth,
+    hatchSpacing: o.bandHatchSpacing,
+    hatchAngle: o.bandHatchAngle,
+    hatchCross: o.bandHatchCross
+  });
+  drawHatchingAtAngle(group, r, bo, bo.hatchAngle);
+  if (bo.hatchCross) drawHatchingAtAngle(group, r, bo, (bo.hatchAngle + 90) % 180);
+}
+function drawNewObjBorderBands(modules, hatching, r, o) {
+  if (boxBandHeight(r) <= 0) return;
+  const bandH = boxBandHeight(r);
+  const top = [r[0], r[1], r[2], bandH];
+  const bottom = [r[0], r[1] + r[3] - bandH, r[2], bandH];
+  if (o.bandHatch && hatching) {
+    drawBandHatching(hatching, top, o);
+    drawBandHatching(hatching, bottom, o);
+  }
+  modules.rect(top[2], top[3]).move(top[0], top[1]).fill('none').stroke({width:strokeWidthMM(o.moduleWidth),color:o.moduleColor});
+  modules.rect(bottom[2], bottom[3]).move(bottom[0], bottom[1]).fill('none').stroke({width:strokeWidthMM(o.moduleWidth),color:o.moduleColor});
+}
+function boxBandHeight(r){ return Math.min(6, Math.max(3, r[3]*0.18)); }
+function emptyHatchingRectForBox(box, r){
+  if(box.maxclass === 'newobj'){
+    const bandH = boxBandHeight(r);
+    return [r[0], r[1] + bandH, r[2], Math.max(0, r[3] - bandH * 2)];
+  }
+  return r;
+}
+
+
+function rectsForBackgroundMask(patch, o){
+  return (patch.boxes||[]).map(Box => {
+    const box = Box.box;
+    if(box.maxclass === 'comment') return null;
+    const r = expandedRectForText(box, box.patching_rect || [0,0,80,20], o);
+    return [r[0], r[1], r[2], r[3]];
+  }).filter(Boolean);
+}
+function pointInsideRects(x, y, rects){
+  return rects.some(r => x >= r[0] && x <= r[0]+r[2] && y >= r[1] && y <= r[1]+r[3]);
+}
+function subtractIntervals(baseStart, baseEnd, cuts){
+  let intervals = [[baseStart, baseEnd]];
+  cuts.forEach(c => {
+    const a = Math.max(baseStart, c[0]);
+    const b = Math.min(baseEnd, c[1]);
+    if(b <= a) return;
+    const next = [];
+    intervals.forEach(iv => {
+      if(b <= iv[0] || a >= iv[1]) next.push(iv);
+      else {
+        if(a > iv[0]) next.push([iv[0], a]);
+        if(b < iv[1]) next.push([b, iv[1]]);
+      }
+    });
+    intervals = next;
+  });
+  return intervals;
+}
+function drawSvgBackground(group, o, bounds, rects){
+  if(o.bgMode === 'none') return;
+  const spacing = Math.max(4, 92 - (o.bgAmount || 80));
+  const color = o.bgColor || '#b8b8b8';
+  const minX = bounds.minX;
+  const minY = bounds.minY;
+  const maxX = bounds.minX + bounds.width;
+  const maxY = bounds.minY + bounds.height;
+
+  const startX = Math.floor(minX / spacing) * spacing;
+  const startY = Math.floor(minY / spacing) * spacing;
+
+  if(o.bgMode === 'grid'){
+    for(let x=startX; x<=maxX; x+=spacing){
+      const cuts = rects
+        .filter(r => x >= r[0] && x <= r[0]+r[2])
+        .map(r => [r[1], r[1]+r[3]]);
+      subtractIntervals(minY, maxY, cuts).forEach(iv => {
+        group.line(x, iv[0], x, iv[1]).stroke({width:strokeWidthMM(0.12), color, linecap:'butt'});
+      });
+    }
+    for(let y=startY; y<=maxY; y+=spacing){
+      const cuts = rects
+        .filter(r => y >= r[1] && y <= r[1]+r[3])
+        .map(r => [r[0], r[0]+r[2]]);
+      subtractIntervals(minX, maxX, cuts).forEach(iv => {
+        group.line(iv[0], y, iv[1], y).stroke({width:strokeWidthMM(0.12), color, linecap:'butt'});
+      });
+    }
+  }
+
+  if(o.bgMode === 'dots'){
+    const dotR = Math.max(0.45, spacing * 0.025);
+    for(let x=startX; x<=maxX; x+=spacing){
+      for(let y=startY; y<=maxY; y+=spacing){
+        if(pointInsideRects(x, y, rects)) continue;
+        group.circle(dotR * 2).center(x, y).fill(color).stroke('none');
+      }
+    }
+  }
+}
+
+
+function objectTextForType(box){
+  return String(box?.text || box?.maxclass || '').trim().toLowerCase();
+}
+function isAudioObject(box){
+  const t = objectTextForType(box);
+  return t.includes('~');
+}
+function isJitterObject(box){
+  const t = objectTextForType(box);
+  return t.startsWith('jit.') || t.includes(' jit.') || t.startsWith('jit_') || t.includes('jit.matrix') || t.includes('jit.gl');
+}
+function isControlSource(box){
+  return ['message','button','toggle','number','flonum'].includes(box?.maxclass);
+}
+function patchcoordKind(sourceBox, destBox){
+  // Control/UI sources should remain solid, even when they drive audio/Jitter objects.
+  if (isControlSource(sourceBox)) return 'normal';
+
+  // Signal/media streams are inferred mostly from the source object.
+  if (isJitterObject(sourceBox)) return 'jitter';
+  if (isAudioObject(sourceBox)) return 'audio';
+
+  // Fallback: destination can still hint at audio/Jitter, but only for non-control sources.
+  if (isJitterObject(destBox)) return 'jitter';
+  if (isAudioObject(destBox)) return 'audio';
+
+  return 'normal';
+}
+
+
+function cubicPoint(p0, p1, p2, p3, t){
+  const mt = 1 - t;
+  return {
+    x: mt*mt*mt*p0.x + 3*mt*mt*t*p1.x + 3*mt*t*t*p2.x + t*t*t*p3.x,
+    y: mt*mt*mt*p0.y + 3*mt*mt*t*p1.y + 3*mt*t*t*p2.y + t*t*t*p3.y
+  };
+}
+function samplePatchcoordPoints(sx, sy, dx, dy, curvy, curvature){
+  if(!curvy || curvature <= 0) return [{x:sx,y:sy},{x:dx,y:dy}];
+  const p0 = {x:sx, y:sy};
+  const p1 = {x:sx, y:sy + curvature};
+  const p2 = {x:dx, y:dy - curvature};
+  const p3 = {x:dx, y:dy};
+  const pts = [];
+  const steps = 120;
+  for(let i=0; i<=steps; i++){
+    pts.push(cubicPoint(p0, p1, p2, p3, i/steps));
+  }
+  return pts;
+}
+function pointAlongPolyline(points, targetDistance){
+  if(targetDistance <= 0) return points[0];
+  let walked = 0;
+  for(let i=1; i<points.length; i++){
+    const a = points[i-1], b = points[i];
+    const seg = Math.hypot(b.x-a.x, b.y-a.y);
+    if(walked + seg >= targetDistance){
+      const t = seg === 0 ? 0 : (targetDistance - walked) / seg;
+      return {x: lerp(a.x, b.x, t), y: lerp(a.y, b.y, t)};
+    }
+    walked += seg;
+  }
+  return points[points.length-1];
+}
+function polylineLength(points){
+  let len = 0;
+  for(let i=1; i<points.length; i++){
+    len += Math.hypot(points[i].x-points[i-1].x, points[i].y-points[i-1].y);
+  }
+  return len;
+}
+function drawSegmentedPatchcoord(group, sx, sy, dx, dy, o, kind){
+  const points = samplePatchcoordPoints(sx, sy, dx, dy, o.curvy, o.curvature);
+  const total = polylineLength(points);
+  const dash = kind === 'jitter' ? 3 : 7;
+  const gap = kind === 'jitter' ? 4 : 4;
+  let pos = 0;
+
+  while(pos < total){
+    const start = pointAlongPolyline(points, pos);
+    const end = pointAlongPolyline(points, Math.min(total, pos + dash));
+    group.path(`M${start.x} ${start.y} L${end.x} ${end.y}`)
+      .fill('none')
+      .stroke({width:strokeWidthMM(o.cableWidth),color:o.cableColor,linecap:'round',linejoin:'round'});
+    pos += dash + gap;
+  }
+}
+
+function drawSVG(patch){
+  document.querySelector('#svg').innerHTML='';
+  const o=opts();
+  const patchBounds = getPatchBounds(patch);
+  const backgroundMaskRects = rectsForBackgroundMask(patch, o);
+  // Export on a US Letter canvas (8.5 x 11 in). The patch itself is not clipped;
+  // it can extend beyond the page boundary when opened in Inkscape/Illustrator.
+  const letterW = 816;
+  const letterH = 1056;
+  const draw=SVG().addTo('#svg').size('215.9mm','279.4mm').viewbox(0,0,letterW,letterH);
+  draw.attr({xmlns:'http://www.w3.org/2000/svg', overflow:'visible'});
+  draw.node.style.overflow = 'visible';
+  const artwork = draw.group().id('patch2plotter');
+  const backgroundLayer = (o.bgMode !== 'none') ? artwork.group().id('background_pattern') : null;
+  if(backgroundLayer) drawSvgBackground(backgroundLayer, o, patchBounds, backgroundMaskRects);
+  const moduleHatching = o.emptyObjectHatch ? artwork.group().id('empty_object_hatching') : null;
+  const newobjBarHatching = o.bandHatch ? artwork.group().id('object_label_hatching') : null;
+  const modules=artwork.group().id('object_outlines');
+  const patchcoords=artwork.group().id('patchcoords');
+  const patchcoordGroups = {};
+  function getPatchcoordGroup(kind){
+    const id = kind === 'audio' ? 'msp' : (kind === 'jitter' ? 'jitter' : 'control');
+    if(!patchcoordGroups[id]) patchcoordGroups[id] = patchcoords.group().id(id);
+    return patchcoordGroups[id];
+  }
+  const textGroup=artwork.group().id('text');
+
+  (patch.lines||[]).forEach(Line=>{
+    const line=Line.patchline;
+    const sourceWrap=(patch.boxes||[]).find(b=>b.box.id===line.source[0]);
+    const destWrap=(patch.boxes||[]).find(b=>b.box.id===line.destination[0]);
+    if(!sourceWrap||!destWrap) return;
+    const s=sourceWrap.box, d=destWrap.box;
+    const sr=expandedRectForText(s, s.patching_rect || [0,0,80,20], o);
+    const dr=expandedRectForText(d, d.patching_rect || [0,0,80,20], o);
+    const sx=outletX(s,line.source[1],sr), sy=sr[1]+sr[3];
+    const dx=inletX(d,line.destination[1],dr), dy=dr[1];
+    const c=o.curvature;
+    const kind = patchcoordKind(s, d);
+    const patchcoordGroup = getPatchcoordGroup(kind);
+    if(o.autoDashPatchcoords && kind !== 'normal'){
+      drawSegmentedPatchcoord(patchcoordGroup, sx, sy, dx, dy, o, kind);
+    } else {
+      const pathData=o.curvy && c>0 ? `M${sx} ${sy} C${sx} ${sy+c} ${dx} ${dy-c} ${dx} ${dy}` : `M${sx} ${sy} L${dx} ${dy}`;
+      patchcoordGroup.path(pathData).fill('none').stroke({width:strokeWidthMM(o.cableWidth),color:o.cableColor,linecap:'round',linejoin:'round'});
+    }
+  });
+
+  (patch.boxes||[]).forEach(Box=>{
+    const box=Box.box, rawR=box.patching_rect||[0,0,80,20];
+    const r=expandedRectForText(box, rawR, o);
+    const isComment=box.maxclass==='comment';
+    const radius=(box.maxclass==='message'||box.maxclass==='function')?5:0;
+    const label = labelForBox(box, rawR, o);
+    const alwaysHatchClasses = ['panel', 'fpic', 'jit.pwindow'];
+    const hatchIfEmptyClasses = ['newobj', 'message', 'bpatcher'];
+    const hatchableEmptyObject =
+      alwaysHatchClasses.includes(box.maxclass) ||
+      (hatchIfEmptyClasses.includes(box.maxclass) && !label);
+    if(!isComment && moduleHatching && hatchableEmptyObject) {
+      const hatchRect = emptyHatchingRectForBox(box, r);
+      if(hatchRect[2] > 0 && hatchRect[3] > 0) drawHatching(moduleHatching, hatchRect, o);
+    }
+    if(!isComment && o.moduleWidth>0){
+      modules.rect(r[2],r[3]).radius(radius).move(r[0],r[1]).fill('none').stroke({width:strokeWidthMM(o.moduleWidth),color:o.moduleColor});
+    }
+    if(box.maxclass==='newobj' && o.moduleWidth>0){
+      drawNewObjBorderBands(modules, newobjBarHatching, r, o);
+    }
+    if(box.maxclass==='button'){
+      const w=o.moduleWidth;
+      modules.circle(r[2]/1.5).center(r[0]+r[2]/2,r[1]+r[3]/2).fill('none').stroke({width:strokeWidthMM(w),color:o.moduleColor});
+    }
+    if(box.maxclass==='toggle'){
+      const border=r[2]*0.25, w=o.moduleWidth;
+      modules.line(r[0]+border,r[1]+border,r[0]+r[2]-border,r[1]+r[3]-border).stroke({width:strokeWidthMM(w),color:o.moduleColor});
+      modules.line(r[0]+r[2]-border,r[1]+border,r[0]+border,r[1]+r[3]-border).stroke({width:strokeWidthMM(w),color:o.moduleColor});
+    }
+    let textOffset=(box.maxclass==='number'||box.maxclass==='flonum')?14:4;
+    if(label && o.showText){
+      const textY = r[1] + Math.max(4, (r[3] - estimateStrokeTextHeight(label,o.textSize)) / 2) + 2;
+      drawStrokeText(textGroup,label,r[0]+textOffset,textY,o.textSize,o.textColor,o.textWidth,o.hersheyFont);
+    }
+    if(box.maxclass==='number' || box.maxclass==='flonum'){
+      const cy=r[1]+r[3]/2;
+      modules.path(`M${r[0]+4} ${cy-5} L${r[0]+10} ${cy} L${r[0]+4} ${cy+5}`).fill('none').stroke({width:strokeWidthMM(o.moduleWidth),color:o.moduleColor,linejoin:'round'});
+    }
+  });
+  applyPreviewZoom();
+  return draw;
+}
+
+
+function resetControls(){
+  const set = (id, value) => {
+    const el = document.querySelector('#' + id);
+    if(!el) return;
+    if(el.type === 'checkbox') el.checked = !!value;
+    else el.value = value;
+  };
+
+  set('previewZoom', 100);
+
+  set('moduleColor', '#000000');
+  set('moduleWidth', 0.25);
+
+  set('showText', true);
+  set('wrapText', false);
+  set('forceCaps', false);
+  set('hersheyFont', 'emsTech');
+  set('textSize', 9);
+  set('textWidth', 0.25);
+  set('textColor', '#000000');
+
+  set('cableColor', '#000000');
+  set('cableWidth', 0.5);
+  set('curvy', true);
+  set('curvature', 35);
+  set('autoDashPatchcoords', false);
+
+  set('bgMode', 'none');
+  set('bgColor', '#b8b8b8');
+  set('bgAmount', 80);
+
+  set('emptyObjectHatch', false);
+  set('hatchColor', '#000000');
+  set('hatchWidth', 0.25);
+  set('hatchSpacing', 4);
+  set('hatchAngle', 45);
+  set('hatchCross', false);
+
+  set('bandHatch', false);
+  set('bandHatchColor', '#000000');
+  set('bandHatchWidth', 0.25);
+  set('bandHatchSpacing', 4);
+  set('bandHatchAngle', 45);
+  set('bandHatchCross', false);
+
+  setHatchControlsEnabled();
+  if(patch) draw = drawSVG(patch);
+  applyPreviewZoom();
+}
+
+function setHatchControlsEnabled(){
+  const objectOn = document.querySelector('#emptyObjectHatch').checked;
+  ['hatchColor','hatchWidth','hatchSpacing','hatchAngle','hatchCross'].forEach(id=>{
+    const el=document.querySelector('#'+id); if(el) el.disabled=!objectOn;
+  });
+  const bandOn = document.querySelector('#bandHatch').checked;
+  ['bandHatchColor','bandHatchWidth','bandHatchSpacing','bandHatchAngle','bandHatchCross'].forEach(id=>{
+    const el=document.querySelector('#'+id); if(el) el.disabled=!bandOn;
+  });
+  const curvyOn = document.querySelector('#curvy').checked;
+  const curvature = document.querySelector('#curvature');
+  if(curvature) curvature.disabled = !curvyOn;
+  const bgOn = document.querySelector('#bgMode').value !== 'none';
+  ['bgColor','bgAmount'].forEach(id=>{
+    const el=document.querySelector('#'+id); if(el) el.disabled=!bgOn;
+  });
+}
+
+function redraw(){ setHatchControlsEnabled(); if(patch) draw=drawSVG(patch); }
+
+document.querySelector('#reset').addEventListener('click', resetControls);
+
+document.querySelector('#read').addEventListener('click',()=>{
+  const input=document.querySelector('#fileInput');
+  if(input) input.click();
+});
+document.querySelector('#fileInput').addEventListener('change',()=>{
+  const file=document.querySelector('#fileInput').files[0]; if(!file)return;
+  const nameEl=document.querySelector('#fileName');
+  if(nameEl) nameEl.textContent=file.name;
+  const reader=new FileReader();
+  reader.onloadend=()=>{ const json=JSON.parse(reader.result); patch=json.patcher||json; draw=drawSVG(patch); };
+  reader.readAsText(file);
+});
+['curvy','curvature','autoDashPatchcoords','bgMode','bgColor','bgAmount','showText','wrapText','forceCaps','hersheyFont','textSize','moduleColor','moduleWidth','emptyObjectHatch','hatchColor','hatchWidth','hatchSpacing','hatchAngle','hatchCross','bandHatch','bandHatchColor','bandHatchWidth','bandHatchSpacing','bandHatchAngle','bandHatchCross','cableColor','cableWidth','textColor','textWidth'].forEach(id=>{
+  const el=document.querySelector('#'+id); el.addEventListener('change',redraw); el.addEventListener('input',redraw);
+});
+document.querySelector('#previewZoom').addEventListener('input',applyPreviewZoom);
+document.querySelector('#zoomIn').addEventListener('click',()=>{const el=document.querySelector('#previewZoom'); el.value=Math.min(300,parseFloat(el.value)+10); applyPreviewZoom();});
+document.querySelector('#zoomOut').addEventListener('click',()=>{const el=document.querySelector('#previewZoom'); el.value=Math.max(25,parseFloat(el.value)-10); applyPreviewZoom();});
+
+
+let pinchStartDistance = null;
+let pinchStartZoom = null;
+const viewport = document.querySelector('#svg');
+function touchDistance(touches){
+  const a=touches[0], b=touches[1];
+  return Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY);
+}
+viewport.addEventListener('touchstart', (e)=>{
+  if(e.touches.length===2){
+    pinchStartDistance = touchDistance(e.touches);
+    pinchStartZoom = parseFloat(document.querySelector('#previewZoom').value)||100;
+    e.preventDefault();
+  }
+}, {passive:false});
+viewport.addEventListener('touchmove', (e)=>{
+  if(e.touches.length===2 && pinchStartDistance){
+    const ratio = touchDistance(e.touches)/pinchStartDistance;
+    const el=document.querySelector('#previewZoom');
+    el.value = Math.max(25, Math.min(300, pinchStartZoom*ratio));
+    applyPreviewZoom();
+    e.preventDefault();
+  }
+}, {passive:false});
+viewport.addEventListener('touchend', ()=>{
+  pinchStartDistance = null;
+  pinchStartZoom = null;
+});
+viewport.addEventListener('wheel', (e)=>{
+  if(!e.ctrlKey && !e.metaKey) return;
+  const el=document.querySelector('#previewZoom');
+  const delta = e.deltaY < 0 ? 10 : -10;
+  el.value = Math.max(25, Math.min(300, parseFloat(el.value)+delta));
+  applyPreviewZoom();
+  e.preventDefault();
+}, {passive:false});
+
+setHatchControlsEnabled();
+document.querySelector('#export').addEventListener('click',()=>{
+  if(!draw) return alert('Read a .maxpat first');
+  const blob=new Blob([draw.svg()],{type:'image/svg+xml'});
+  const a=document.createElement('a');
+  a.download='patch2plotter.svg';
+  a.href=URL.createObjectURL(blob);
+  a.click();
+  URL.revokeObjectURL(a.href);
+});
+</script>
+</body>
+</html>
