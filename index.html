@@ -8,20 +8,20 @@
   <style>
     :root{--panel:#f7f7f7;--line:#d4d4d4;--muted:#666;--control:#fff;--blue:#0a84ff}
     *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#111;display:grid;grid-template-columns:340px minmax(0,1fr);min-height:100vh}
-    aside{padding:9px;background:#f4f4f4;border-right:1px solid #ccc;overflow:auto;max-height:100vh}
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#111;display:grid;grid-template-columns:340px minmax(0,1fr);height:100vh;overflow:hidden}
+    aside{padding:9px;background:#f4f4f4;border-right:1px solid #ccc;overflow:auto;height:100vh}
     h1{font-size:18px;margin:0 0 5px;line-height:1.1}.title-line{display:flex;align-items:baseline;gap:7px}.title-credit{font-size:11px;font-weight:400;color:#666}.title-credit a{color:#666;text-decoration:underline;text-underline-offset:2px}
     .panel{background:#fff;border:1px solid var(--line);border-radius:9px;padding:7px 9px;margin:0 0 7px;box-shadow:0 1px 0 rgba(0,0,0,.03)}
-    .section-title{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#444;margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid #e5e5e5;cursor:pointer;list-style:none}.section-title::-webkit-details-marker{display:none}details>.section-title:before{content:'▸';display:inline-block;width:14px;color:#777}details[open]>.section-title:before{content:'▾'}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:6px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.tight-row{align-items:end}.text-top-row{grid-template-columns:1fr 1.35fr;align-items:start}.inline-check{align-self:end;min-height:28px}.zoom-field{margin-top:8px;padding-top:0}.tagline{margin:0 0 18px}.load-panel{margin-top:18px}.preview-zoom-row{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;margin-top:7px;padding-top:0}.preview-zoom-row span{font-size:12px;white-space:nowrap;color:#222}.load-panel input[type="file"]{display:none}.file-display{display:flex;align-items:center;justify-content:center;width:100%;height:29px;padding:5px 7px;border-radius:7px;border:1px solid #aaa;background:#fff;color:#111;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;cursor:default}.curvature-row{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;margin-top:5px}.curvature-row .check{margin:0}.curvature-row input[type="range"]{margin-top:1px}.hatch-top-row{display:grid;grid-template-columns:auto auto 1fr;gap:8px;align-items:end;margin:2px 0 6px}.hatch-top-row .check{margin:0 0 6px}.hatch-top-row .field{margin-bottom:0}.bg-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:end;margin:2px 0 6px}.bg-amount-row{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center}.bg-amount-row span{font-size:12px;white-space:nowrap;color:#222}
+    .section-title{font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#444;margin:0 0 6px;padding-bottom:4px;border-bottom:1px solid #e5e5e5;cursor:pointer;list-style:none;display:flex;align-items:center}.section-title::-webkit-details-marker{display:none}.section-label{flex:1}.section-enable{display:flex;align-items:center;gap:5px;margin-left:auto;font-size:11px;font-weight:400;letter-spacing:0;text-transform:none;color:#555;cursor:pointer}.section-enable input{width:14px;height:14px;margin:0}details>.section-title:before{content:'▸';display:inline-block;width:14px;color:#777}details[open]>.section-title:before{content:'▾'}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:6px}.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}.tight-row{align-items:end}.text-top-row{grid-template-columns:1fr 1.35fr;align-items:start}.tagline{margin:0 0 18px}.load-panel{margin-top:18px}.preview-zoom-row{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;margin-top:7px;padding-top:0}.preview-zoom-row span{font-size:12px;white-space:nowrap;color:#222}.load-panel input[type="file"]{display:none}.file-display{display:flex;align-items:center;justify-content:center;width:100%;height:29px;padding:5px 7px;border-radius:7px;border:1px solid #aaa;background:#fff;color:#111;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;cursor:default}.curvature-row{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center;margin-top:5px}.curvature-row .check{margin:0}.curvature-row input[type="range"]{margin-top:1px}.hatch-top-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end;margin:2px 0 7px}.hatch-top-row .check{margin:0;min-height:45px;padding:0 8px;border:1px solid #d8d8d8;border-radius:7px;background:#fafafa}.hatch-top-row .field{margin-bottom:0}.text-toggle-group{display:grid;grid-template-columns:1fr;gap:6px}.text-toggle-group .check{margin:0;min-height:32px;padding:0 8px;border:1px solid #d8d8d8;border-radius:7px;background:#fafafa}.technical-fields{display:grid;grid-template-columns:1fr;gap:0}.technical-fields .field:last-child{margin-bottom:0}.bg-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-items:end;margin:2px 0 6px}.bg-amount-row{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:center}.bg-amount-row span{font-size:12px;white-space:nowrap;color:#222}.spread-row{display:grid;grid-template-columns:18px minmax(0,1fr) 54px;gap:7px;align-items:center;margin:5px 0}.spread-row span{font-size:12px;color:#222}.spread-value-wrap{display:grid;grid-template-columns:1fr auto;align-items:center;border:1px solid #aaa;border-radius:7px;background:#fff;overflow:hidden;min-width:0}.spread-value-wrap input{width:100%;height:27px;border:0;border-radius:0;padding:4px 2px 4px 6px;text-align:right;font-size:10px;font-variant-numeric:tabular-nums;background:transparent}.spread-value-wrap input:focus{outline:2px solid var(--blue);outline-offset:-2px}.spread-value-wrap span{padding:0 5px 0 1px;color:#555;font-size:10px;pointer-events:none}
     .field{display:flex;flex-direction:column;gap:3px;margin:0 0 6px;font-size:12px;color:#222;min-width:0}.field span{line-height:1.15}
     .check{display:flex;align-items:center;gap:7px;margin:5px 0;font-size:12px;line-height:1.2;color:#111}.check input{width:15px;height:15px;margin:0;flex:0 0 auto}
     input,button,select{font:inherit;padding:5px 7px;border-radius:7px;border:1px solid #aaa;background:var(--control);color:#111;max-width:100%;min-width:0}button{cursor:pointer;background:#e9e9e9;font-size:12px;padding:5px 8px;min-height:28px}button:hover{background:#ddd}
     input[type="range"]{padding:0;height:22px;width:100%}input[type="color"]{width:100%;height:28px;padding:2px}input[type="number"]{width:100%}
-    .compact{margin-bottom:0}.hint{font-size:12px;color:#555;line-height:1.35;margin:0}.mini{font-size:12px;color:var(--muted)}
+    .compact{margin-bottom:0}.hint{font-size:12px;color:#555;line-height:1.35;margin:0}
     a{color:#111;text-decoration:underline;text-underline-offset:2px}
     input:disabled{opacity:.35;cursor:not-allowed}
-    .title-divider{height:1px;background:#d9d9d9;margin:10px 0 12px}.slim-panel{padding:6px 9px}.hidden-zoom{display:none}.credit-panel{background:#fafafa}#svg{position:relative;padding:18px;overflow:auto;background:#fff;touch-action:none;min-width:0;max-width:100%;max-height:100vh}.hr{height:1px;background:#e2e2e2;margin:12px 0}
+    .title-divider{height:1px;background:#d9d9d9;margin:10px 0 12px}#svg{position:relative;padding:0;overflow:auto;background:#fff;touch-action:none;min-width:0;width:100%;height:100vh;overscroll-behavior:contain}
   </style>
 </head>
 <body>
@@ -31,7 +31,7 @@
     <div class="title-divider"></div>
 
     <section class="panel load-panel">
-      <input id="fileInput" type="file" accept=".maxpat,.json" />
+      <input id="fileInput" type="file" accept=".maxpat,.maxhelp,.json" />
       <div id="fileName" class="file-display">No file chosen</div>
       <div class="row3" style="margin-top:8px">
         <button id="read" type="button">↑ Read</button>
@@ -39,23 +39,40 @@
         <button id="export" type="button">↓ SVG</button>
       </div>
       <div class="preview-zoom-row"><span>Preview zoom</span><input id="previewZoom" type="range" min="25" max="300" step="5" value="100" /></div>
-      <button id="zoomOut" class="hidden-zoom" type="button">Zoom −</button>
-      <button id="zoomIn" class="hidden-zoom" type="button">Zoom +</button>
     </section>
 
-    <details class="panel" open>
-      <summary class="section-title">Object Outlines</summary>
-      <div class="row tight-row">
-        <label class="field"><span>Color</span><input id="moduleColor" type="color" value="#000000" /></label>
-        <label class="field"><span>Width (mm)</span><input id="moduleWidth" type="number" min="0" step="0.05" value="0.25" /></label>
+
+    <details class="panel">
+      <summary class="section-title"><span class="section-label">Spread</span></summary>
+      <div class="spread-row">
+        <span>X</span>
+        <input id="spreadX" type="range" min="-50" max="50" step="1" value="0" />
+        <label class="spread-value-wrap" aria-label="Spread X percentage"><input id="spreadXValue" type="number" min="-50" max="50" step="1" value="0" /><span>%</span></label>
+      </div>
+      <div class="spread-row">
+        <span>Y</span>
+        <input id="spreadY" type="range" min="-50" max="50" step="1" value="0" />
+        <label class="spread-value-wrap" aria-label="Spread Y percentage"><input id="spreadYValue" type="number" min="-50" max="50" step="1" value="0" /><span>%</span></label>
       </div>
     </details>
 
-    <details class="panel" open>
-      <summary class="section-title">Text</summary>
+    <details class="panel">
+      <summary class="section-title"><span class="section-label">Patchcoords</span><label class="section-enable"><input id="showPatchcoords" type="checkbox" checked /> Enable</label></summary>
+      <div class="row tight-row">
+        <label class="field"><span>Color</span><input id="cableColor" type="color" value="#000000" /></label>
+        <label class="field"><span>Width (mm)</span><input id="cableWidth" type="number" min="0.05" step="0.05" value="0.5" /></label>
+      </div>
+      <div class="curvature-row">
+        <label class="check"><input id="curvy" type="checkbox" checked /> Curve</label>
+        <input id="curvature" type="range" min="0" max="25" step="1" value="12" />
+      </div>
+      <label class="check"><input id="autoDashPatchcoords" type="checkbox" checked /> Dashes</label>
+    </details>
+
+    <details class="panel">
+      <summary class="section-title"><span class="section-label">Text</span><label class="section-enable"><input id="showText" type="checkbox" checked /> Enable</label></summary>
       <div class="row text-top-row">
-        <div>
-          <label class="check"><input id="showText" type="checkbox" checked /> Show</label>
+        <div class="text-toggle-group">
           <label class="check"><input id="wrapText" type="checkbox" /> Wrap</label>
           <label class="check"><input id="forceCaps" type="checkbox" /> Caps</label>
         </div>
@@ -89,41 +106,30 @@
       </div>
     </details>
 
-    <details class="panel" open>
-      <summary class="section-title">Patchcoords</summary>
+    <details class="panel">
+      <summary class="section-title"><span class="section-label">Object Outlines</span><label class="section-enable"><input id="showObjectOutlines" type="checkbox" checked /> Enable</label></summary>
       <div class="row tight-row">
-        <label class="field"><span>Color</span><input id="cableColor" type="color" value="#000000" /></label>
-        <label class="field"><span>Width (mm)</span><input id="cableWidth" type="number" min="0.05" step="0.05" value="0.5" /></label>
-      </div>
-      <div class="curvature-row">
-        <label class="check"><input id="curvy" type="checkbox" checked /> Curve</label>
-        <input id="curvature" type="range" min="0" max="25" step="1" value="12" />
-      </div>
-      <label class="check"><input id="autoDashPatchcoords" type="checkbox" /> Dashes</label>
-    </details>
-
-    <details class="panel">
-      <summary class="section-title">Background Pattern</summary>
-      <div class="bg-row">
-        <label class="field compact"><span>Pattern</span>
-          <select id="bgMode">
-            <option value="none" selected>None</option>
-            <option value="dots">Dots</option>
-            <option value="grid">Grid</option>
-          </select>
-        </label>
-        <label class="field compact"><span>Color</span><input id="bgColor" type="color" value="#b8b8b8" /></label>
-      </div>
-      <div class="bg-amount-row">
-        <span>Amount</span>
-        <input id="bgAmount" type="range" min="12" max="80" step="1" value="80" />
+        <label class="field"><span>Color</span><input id="moduleColor" type="color" value="#000000" /></label>
+        <label class="field"><span>Width (mm)</span><input id="moduleWidth" type="number" min="0" step="0.05" value="0.25" /></label>
       </div>
     </details>
 
     <details class="panel">
-      <summary class="section-title">Empty Object Hatching</summary>
+      <summary class="section-title"><span class="section-label">Object Label Hatching</span><label class="section-enable"><input id="bandHatch" type="checkbox" /> Enable</label></summary>
       <div class="hatch-top-row">
-        <label class="check"><input id="emptyObjectHatch" type="checkbox" /> Enable</label>
+        <label class="check"><input id="bandHatchCross" type="checkbox" /> Crosshatch</label>
+        <label class="field"><span>Angle</span><input id="bandHatchAngle" type="number" min="0" max="180" step="1" value="45" /></label>
+      </div>
+      <div class="row3 tight-row">
+        <label class="field"><span>Color</span><input id="bandHatchColor" type="color" value="#000000" /></label>
+        <label class="field"><span>Width (mm)</span><input id="bandHatchWidth" type="number" min="0.05" step="0.05" value="0.25" /></label>
+        <label class="field"><span>Spacing</span><input id="bandHatchSpacing" type="number" min="1" step="1" value="4" /></label>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary class="section-title"><span class="section-label">Empty Object Hatching</span><label class="section-enable"><input id="emptyObjectHatch" type="checkbox" /> Enable</label></summary>
+      <div class="hatch-top-row">
         <label class="check"><input id="hatchCross" type="checkbox" /> Crosshatch</label>
         <label class="field"><span>Angle</span><input id="hatchAngle" type="number" min="0" max="180" step="1" value="45" /></label>
       </div>
@@ -135,24 +141,52 @@
     </details>
 
     <details class="panel">
-      <summary class="section-title">Object Label Hatching</summary>
-      <div class="hatch-top-row">
-        <label class="check"><input id="bandHatch" type="checkbox" /> Enable</label>
-        <label class="check"><input id="bandHatchCross" type="checkbox" /> Crosshatch</label>
-        <label class="field"><span>Angle</span><input id="bandHatchAngle" type="number" min="0" max="180" step="1" value="45" /></label>
+      <summary class="section-title"><span class="section-label">Background Pattern</span><label class="section-enable"><input id="enableBackgroundPattern" type="checkbox" /> Enable</label></summary>
+      <div class="bg-row">
+        <label class="field compact"><span>Pattern</span>
+          <select id="bgMode">
+            <option value="dots" selected>Dots</option>
+            <option value="grid">Grid</option>
+            <option value="scratchy">Scratchy</option>
+          </select>
+        </label>
+        <label class="field compact"><span>Color</span><input id="bgColor" type="color" value="#b8b8b8" /></label>
       </div>
-      <div class="row3 tight-row">
-        <label class="field"><span>Color</span><input id="bandHatchColor" type="color" value="#000000" /></label>
-        <label class="field"><span>Width (mm)</span><input id="bandHatchWidth" type="number" min="0.05" step="0.05" value="0.25" /></label>
-        <label class="field"><span>Spacing</span><input id="bandHatchSpacing" type="number" min="1" step="1" value="4" /></label>
+      <div class="bg-amount-row">
+        <span>Amount</span>
+        <input id="bgAmount" type="range" min="12" max="80" step="1" value="80" />
       </div>
     </details>
+
+    <details class="panel">
+      <summary class="section-title"><span class="section-label">Technical Label</span><label class="section-enable"><input id="showTechnicalLabel" type="checkbox" checked /> Enable</label></summary>
+      <div class="technical-fields">
+        <label class="field"><span>Patch name</span><input id="technicalPatchName" type="text" value="patch" /></label>
+        <label class="field"><span>Author</span><input id="technicalAuthor" type="text" value="Kevin Kripper" /></label>
+        <label class="field"><span>Date</span><input id="technicalDate" type="date" /></label>
+      </div>
+    </details>
+
   </aside>
   <main id="svg"></main>
 <script>
 function lerp(a,b,t){return a+t*(b-a)}
 function strokeWidthMM(v){ return `${Number(v) || 0}mm`; }
 let draw=null, patch=null;
+let currentPatchFileName = 'patch';
+function fileDateValue(file){
+  const date = new Date(file.lastModified);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+let lastPreviewZoom = 1;
+let pendingRedrawFrame = null;
+let pendingPreviewState = null;
+let previewRestoreGeneration = 0;
+let currentPatchBounds = { minX: 0, minY: 0, width: 816, height: 1056 };
 
 const HERSHEY = {
   'A':[[[0,8],[3,0],[6,8]],[[1,5],[5,5]]], 'B':[[[0,0],[0,8]],[[0,0],[4,0],[6,2],[4,4],[0,4]],[[0,4],[4,4],[6,6],[4,8],[0,8]]],
@@ -255,7 +289,7 @@ function transformPoint(p, fp, size){
 }
 function drawStrokeText(group, str, x, y, size, color, width, fontName='simplex'){
   const fp=fontParams(fontName);
-  const scale=size/8, letterW=7*scale*fp.spacing, lineH=10*scale;
+  const scale=size/8, letterW=7*scale*fp.spacing, lineH=10*scale+2;
   let cx=x, cy=y;
   String(str||'').split('').forEach(ch=>{
     if(ch==='\n'){cx=x; cy+=lineH; return;}
@@ -288,77 +322,329 @@ function estimateStrokeTextWidth(str, size, fontName='simplex') {
 }
 function estimateStrokeTextHeight(str, size) {
   const scale = size / 8;
-  const lineH = 12 * scale;
+  const lineH = 12 * scale + 2;
   return Math.max(size, String(str || '').split('\n').length * lineH);
 }
 function rawBoxLabel(box) {
-  if (box.maxclass === 'number' || box.maxclass === 'flonum') return '';
-  return box.text || '';
+  if (box.maxclass === 'number' || box.maxclass === 'flonum' || box.maxclass === 'number~') return '';
+  return String(box.text || '')
+    .replace(/\\;/g, ';')
+    .replace(/\\,/g, ',')
+    .replace(/[\r\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '');
 }
-function prepareLabel(label, o) {
-  label = String(label || '');
-  return o.forceCaps ? label.toUpperCase() : label;
-}
-function wrapTextToWidth(label, maxWidth, size, fontName) {
-  label = String(label || '').replace(/\s+/g, ' ').trim();
+function wrapTextToWidth(label, maxWidth, size, fontName, box=null) {
+  label = String(label || '').replace(/\r/g, '').trim();
   if (!label) return '';
 
-  maxWidth *= 1.12;
+  const tokens = label.split(/\s+/).filter(Boolean);
+  const maxclass = box?.maxclass || '';
 
-  const parts = label.split(/\s+(?=@)/g);
-  const chunks = [];
-  parts.forEach(part => {
-    const words = part.split(/\s+/g).filter(Boolean);
-    if (!words.length) return;
-    if (words[0].startsWith('@')) {
-      chunks.push(words.join(' '));
-    } else {
-      chunks.push(...words);
-    }
-  });
+  const objectName = (tokens[0] || '').toLowerCase();
+  const isAudioObjectName = objectName.includes('~');
 
-  const lines = [];
-  let line = '';
+  if (maxclass === 'newobj' && !isAudioObjectName && tokens.length <= 3) return label;
+  if (maxclass === 'newobj' && isAudioObjectName && tokens.length <= 4) return label;
+  if (maxclass === 'comment' && tokens.length <= 3) return label;
+  if (maxclass === 'message' && tokens.length <= 4) return label;
 
-  chunks.forEach(tok => {
-    const test = line ? line + ' ' + tok : tok;
+  if (maxclass === 'newobj' && isAudioObjectName && tokens.length > 4) {
+    const firstLine = tokens.slice(0, 3).join(' ');
+    const remaining = tokens.slice(3);
+    return [firstLine, ...packUnits(remaining)].join('\n');
+  }
 
-    if (line && estimateStrokeTextWidth(test, size, fontName) > maxWidth) {
+  const fullWidth = estimateStrokeTextWidth(label, size, fontName);
+  if (fullWidth <= maxWidth) return label;
 
-      const commaBreak = line.lastIndexOf(', ');
-      if (commaBreak > 0) {
-        const before = line.slice(0, commaBreak + 1).trim();
-        const after = line.slice(commaBreak + 2).trim();
-        if (before) lines.push(before);
-        line = after ? after + ' ' + tok : tok;
-      } else {
+  function packUnits(units) {
+    const lines = [];
+    let line = '';
+
+    units.forEach(unit => {
+      const test = line ? line + ' ' + unit : unit;
+
+      if (line && estimateStrokeTextWidth(test, size, fontName) > maxWidth) {
         lines.push(line);
-        line = tok;
+        line = unit;
+      } else {
+        line = test;
       }
-    } else {
-      line = test;
-    }
-  });
+    });
 
-  if (line) lines.push(line);
-  return lines.join('\n');
+    if (line) lines.push(line);
+    return lines;
+  }
+
+  if (maxclass === 'newobj') {
+    const firstAttr = tokens.findIndex(token => token.startsWith('@'));
+
+    if (firstAttr >= 0) {
+      const core = tokens.slice(0, firstAttr).join(' ');
+      const attrs = [];
+      let current = [];
+
+      for (let i = firstAttr; i < tokens.length; i++) {
+        const token = tokens[i];
+
+        if (token.startsWith('@') && current.length) {
+          attrs.push(current.join(' '));
+          current = [token];
+        } else {
+          current.push(token);
+        }
+      }
+
+      if (current.length) attrs.push(current.join(' '));
+
+      const firstLine = [core, attrs[0]].filter(Boolean).join(' ');
+      const remaining = attrs.slice(1);
+
+      return [firstLine, ...packUnits(remaining)].filter(Boolean).join('\n');
+    }
+  }
+
+  return packUnits(tokens).join('\n');
 }
 function labelForBox(box, r, o) {
-  let label = prepareLabel(rawBoxLabel(box), o);
+  let label = String(rawBoxLabel(box) || '');
+  if (o.forceCaps) label = label.toUpperCase();
   if (!label) return '';
-  const textOffset = (box.maxclass === 'number' || box.maxclass === 'flonum') ? 14 : 4;
-  const maxWidth = Math.max(20, r[2] - textOffset - 2);
-  if (o.wrapText) label = wrapTextToWidth(label, maxWidth, o.textSize, o.hersheyFont);
-  return label;
+
+  label = String(label).replace(/\r/g, '');
+
+  if (!o.wrapText) {
+    return label.replace(/\s*\n\s*/g, ' ').replace(/[ \t]+/g, ' ').trim();
+  }
+
+  const textOffset =
+    (box.maxclass === 'number' || box.maxclass === 'flonum') ? 14 : 4;
+  const maxWidth = Math.max(20, r[2] - textOffset - 10);
+
+  return wrapTextToWidth(
+    label,
+    maxWidth,
+    o.textSize,
+    o.hersheyFont,
+    box
+  );
 }
+function technicalLabelMetrics(patch, o, layoutRects) {
+  if (!o.showTechnicalLabel) return null;
+
+  const rects = (patch.boxes || []).map(Box => layoutRectForBox(Box.box, o, layoutRects));
+  let maxX = patch.rect?.[2] || 0;
+  let maxY = patch.rect?.[3] || 0;
+  if (rects.length) {
+    maxX = Math.max(maxX, ...rects.map(r => r[0] + r[2]));
+    maxY = Math.max(maxY, ...rects.map(r => r[1] + r[3]));
+  }
+
+  const fontSize = Math.max(7, Math.min(9, o.textSize));
+  const labelWidth = Math.max(
+    estimateStrokeTextWidth('PATCH', fontSize, o.hersheyFont),
+    estimateStrokeTextWidth('AUTHOR', fontSize, o.hersheyFont),
+    estimateStrokeTextWidth('DATE', fontSize, o.hersheyFont)
+  );
+  const values = [
+    String(o.technicalPatchName || currentPatchFileName || 'patch'),
+    String(o.technicalAuthor || ''),
+    String(o.technicalDate || '')
+  ];
+  const valueWidth = Math.max(...values.map(v => estimateStrokeTextWidth(v, fontSize, o.hersheyFont)), 80);
+  const padding = 8;
+  const labelColumn = labelWidth + padding * 2;
+  const width = Math.max(260, labelColumn + valueWidth + padding * 2);
+  const rowHeight = Math.max(18, fontSize + 9);
+  const height = rowHeight * 3;
+  const x = maxX - width;
+  const y = maxY + 14;
+
+  return { rect:[x,y,width,height], rowHeight, labelColumn, fontSize, values };
+}
+
+function drawTechnicalLabel(group, metrics, o) {
+  if (!group || !metrics) return;
+  const [x,y,w,h] = metrics.rect;
+  const stroke = {width:strokeWidthMM(o.moduleWidth), color:o.moduleColor, linecap:'butt', linejoin:'miter'};
+  group.rect(w,h).move(x,y).fill('none').stroke(stroke);
+  group.line(x + metrics.labelColumn, y, x + metrics.labelColumn, y + h).stroke(stroke);
+  for(let i=1;i<3;i++) group.line(x, y + metrics.rowHeight*i, x+w, y + metrics.rowHeight*i).stroke(stroke);
+
+  const keys = ['PATCH','AUTHOR','DATE'];
+  for(let i=0;i<3;i++){
+    const ty = y + i*metrics.rowHeight + Math.max(3, (metrics.rowHeight - metrics.fontSize)/2);
+    drawStrokeText(group, keys[i], x+5, ty, metrics.fontSize, o.textColor, o.textWidth, o.hersheyFont);
+    drawStrokeText(group, metrics.values[i], x+metrics.labelColumn+6, ty, metrics.fontSize, o.textColor, o.textWidth, o.hersheyFont);
+  }
+}
+
+function boundsIncludingRect(bounds, rect) {
+  if(!rect) return bounds;
+  const minX = Math.min(bounds.minX, rect[0]-20);
+  const minY = Math.min(bounds.minY, rect[1]-20);
+  const maxX = Math.max(bounds.minX+bounds.width, rect[0]+rect[2]+20);
+  const maxY = Math.max(bounds.minY+bounds.height, rect[1]+rect[3]+20);
+  return {minX,minY,width:maxX-minX,height:maxY-minY};
+}
+
+function expandedClipRect(rect, amount=0.75){
+  return [rect[0]-amount, rect[1]-amount, rect[2]+amount*2, rect[3]+amount*2];
+}
+
+function pointAtSegment(a,b,t){ return {x:lerp(a.x,b.x,t), y:lerp(a.y,b.y,t)}; }
+function pointsNearlyEqual(a,b){ return Math.hypot(a.x-b.x,a.y-b.y) < 0.02; }
+
+function clippedPolylineParts(points, clipRect){
+  if(!clipRect || points.length < 2) return [points];
+  const parts=[];
+  let current=[];
+  const flush=()=>{ if(current.length>1) parts.push(current); current=[]; };
+
+  for(let i=1;i<points.length;i++){
+    const a=points[i-1], b=points[i];
+    const inside=lineRectTInterval(a.x,a.y,b.x,b.y,clipRect);
+    const intervals = inside ? [[0,inside[0]],[inside[1],1]] : [[0,1]];
+    intervals.forEach(([t0,t1])=>{
+      if(t1-t0 <= 1e-6) return;
+      const p0=pointAtSegment(a,b,t0), p1=pointAtSegment(a,b,t1);
+      if(current.length && pointsNearlyEqual(current[current.length-1],p0)) current.push(p1);
+      else { flush(); current=[p0,p1]; }
+    });
+    if(inside && inside[1]-inside[0] > 1e-6) flush();
+  }
+  flush();
+  return parts;
+}
+
+function drawClippedPolyline(group, points, clipRect, stroke){
+  clippedPolylineParts(points, clipRect).forEach(part=>{
+    const d=part.map((p,i)=>`${i?'L':'M'}${p.x} ${p.y}`).join(' ');
+    group.path(d).fill('none').stroke(stroke);
+  });
+}
+
 function expandedRectForText(box, r, o) {
+  const rect = r.slice();
   const label = labelForBox(box, r, o);
-  if (!o.expandTextBoxes || !label || box.maxclass === 'comment') return r;
-  const textOffset = (box.maxclass === 'number' || box.maxclass === 'flonum') ? 14 : 4;
+  if (!o.expandTextBoxes || !label) return rect;
+
+  const textOffset =
+    (box.maxclass === 'number' || box.maxclass === 'flonum') ? 14 : 4;
   const lines = label.split('\n');
-  const neededW = textOffset + Math.max(...lines.map(line => estimateStrokeTextWidth(line, o.textSize, o.hersheyFont))) + 8;
-  const neededH = estimateStrokeTextHeight(label, o.textSize) + 12;
-  return [r[0], r[1], Math.max(r[2], neededW), Math.max(r[3], neededH)];
+  const paddingX = 2;
+  const paddingY = 8;
+  const capsHeightAllowance = o.forceCaps ? 4 : 0;
+  const multilineHeightAllowance = lines.length > 1 ? 4 : 0;
+
+  const neededW =
+    textOffset +
+    Math.max(...lines.map(line =>
+      estimateStrokeTextWidth(line, o.textSize, o.hersheyFont)
+    )) +
+    paddingX;
+
+  const neededH =
+    estimateStrokeTextHeight(label, o.textSize) +
+    paddingY + capsHeightAllowance + multilineHeightAllowance;
+
+  // Never make a Max box smaller than its stored patching_rect.
+  // In both modes, grow only as much as the Hershey text actually needs.
+  // Wrap may therefore increase height and, when a wrapped line is still wider
+  // than the original Max box, increase width just enough to contain it.
+  rect[2] = Math.max(r[2], neededW);
+  rect[3] = Math.max(r[3], neededH);
+
+  return rect;
+}
+function computeLayoutRects(patch, o) {
+  const map = new Map();
+  const entries = (patch.boxes || []).map(Box => {
+    const box = Box.box;
+    const raw = box.patching_rect || [0, 0, 80, 20];
+    const rect = expandedRectForText(box, raw, o).slice();
+    rect[0] = raw[0];
+    rect[1] = raw[1];
+    return { box, raw, rect };
+  });
+
+  if (!entries.length) return map;
+
+  let minCX = Infinity, maxCX = -Infinity;
+  let minCY = Infinity, maxCY = -Infinity;
+
+  entries.forEach(({ raw }) => {
+    const cx = raw[0] + raw[2] / 2;
+    const cy = raw[1] + raw[3] / 2;
+    minCX = Math.min(minCX, cx);
+    maxCX = Math.max(maxCX, cx);
+    minCY = Math.min(minCY, cy);
+    maxCY = Math.max(maxCY, cy);
+  });
+
+  const centerX = (minCX + maxCX) / 2;
+  const centerY = (minCY + maxCY) / 2;
+  const factorX = 1 + (o.spreadX || 0) / 100;
+  const factorY = 1 + (o.spreadY || 0) / 100;
+
+  entries.forEach(({ raw, rect }) => {
+    const rawCX = raw[0] + raw[2] / 2;
+    const rawCY = raw[1] + raw[3] / 2;
+
+    // The Max patching_rect position is the source of truth. Spread adds only
+    // a displacement from the patch centre; resized/wrapped boxes do not get
+    // silently re-centred around their original rectangle.
+    rect[0] = raw[0] + (rawCX - centerX) * (factorX - 1);
+    rect[1] = raw[1] + (rawCY - centerY) * (factorY - 1);
+  });
+
+  // Gentle default cleanup: clearly overlapping rectangles receive a tiny,
+  // symmetrical nudge. Each object is capped at about 5 px of total movement,
+  // so the original Max composition remains recognizable.
+  const maxNudge = 5;
+  const nudges = new Map(entries.map(({ box }) => [box.id, { x: 0, y: 0 }]));
+  for (let pass = 0; pass < 2; pass++) {
+    for (let i = 0; i < entries.length; i++) {
+      for (let j = i + 1; j < entries.length; j++) {
+        const a = entries[i], b = entries[j];
+        const overlapX = Math.min(a.rect[0] + a.rect[2], b.rect[0] + b.rect[2]) - Math.max(a.rect[0], b.rect[0]);
+        const overlapY = Math.min(a.rect[1] + a.rect[3], b.rect[1] + b.rect[3]) - Math.max(a.rect[1], b.rect[1]);
+        if (overlapX <= 2 || overlapY <= 2) continue;
+
+        const na = nudges.get(a.box.id);
+        const nb = nudges.get(b.box.id);
+        const acx = a.rect[0] + a.rect[2] / 2;
+        const acy = a.rect[1] + a.rect[3] / 2;
+        const bcx = b.rect[0] + b.rect[2] / 2;
+        const bcy = b.rect[1] + b.rect[3] / 2;
+
+        if (overlapX <= overlapY) {
+          const dir = acx <= bcx ? -1 : 1;
+          const stepA = Math.min(2.5, maxNudge - Math.abs(na.x));
+          const stepB = Math.min(2.5, maxNudge - Math.abs(nb.x));
+          a.rect[0] += dir * stepA;
+          b.rect[0] -= dir * stepB;
+          na.x += dir * stepA;
+          nb.x -= dir * stepB;
+        } else {
+          const dir = acy <= bcy ? -1 : 1;
+          const stepA = Math.min(2.5, maxNudge - Math.abs(na.y));
+          const stepB = Math.min(2.5, maxNudge - Math.abs(nb.y));
+          a.rect[1] += dir * stepA;
+          b.rect[1] -= dir * stepB;
+          na.y += dir * stepA;
+          nb.y -= dir * stepB;
+        }
+      }
+    }
+  }
+
+  entries.forEach(({ box, rect }) => map.set(box.id, rect));
+  return map;
+}
+
+function layoutRectForBox(box, o, layoutRects) {
+  if (layoutRects && layoutRects.has(box.id)) return layoutRects.get(box.id);
+  return expandedRectForText(box, box.patching_rect || [0, 0, 80, 20], o);
 }
 function updatePreviewScrollArea(bounds){
   const main = document.querySelector('#svg');
@@ -376,23 +662,45 @@ function updatePreviewScrollArea(bounds){
   const minY = Math.min(0, bounds?.minY || 0);
   const maxX = Math.max(816, (bounds?.minX || 0) + (bounds?.width || 816));
   const maxY = Math.max(1056, (bounds?.minY || 0) + (bounds?.height || 1056));
-  spacer.style.width = ((maxX - minX) * z + 80) + 'px';
-  spacer.style.height = ((maxY - minY) * z + 80) + 'px';
+  spacer.style.width = Math.max(main.clientWidth, (maxX - minX) * z + 96) + 'px';
+  spacer.style.height = Math.max(main.clientHeight, (maxY - minY) * z + 96) + 'px';
 }
 function applyPreviewZoom(){
   const main=document.querySelector('#svg');
+  if(!main) return;
+
   const z=(parseFloat(document.querySelector('#previewZoom')?.value)||100)/100;
-  const svgEl = main ? main.querySelector('svg') : null;
+  const oldZ = lastPreviewZoom || z;
+  const zoomChanged = Math.abs(z - oldZ) > 1e-9;
+
+  // Preserve the point currently at the center of the viewport while zooming.
+  const centerContentX = (main.scrollLeft + main.clientWidth / 2) / oldZ;
+  const centerContentY = (main.scrollTop + main.clientHeight / 2) / oldZ;
+
+  const svgEl = main.querySelector('svg');
+  const bounds = currentPatchBounds;
+
   if(svgEl){
+    const minX = Math.min(0, bounds.minX || 0);
+    const minY = Math.min(0, bounds.minY || 0);
     svgEl.style.transformOrigin='0 0';
     svgEl.style.transform=`scale(${z})`;
     svgEl.style.display='block';
     svgEl.style.position='absolute';
-    svgEl.style.left='18px';
-    svgEl.style.top='18px';
+    svgEl.style.left=(24 - minX * z) + 'px';
+    svgEl.style.top=(24 - minY * z) + 'px';
     svgEl.style.flex='0 0 auto';
   }
-  if(patch) updatePreviewScrollArea(getPatchBounds(patch));
+
+  updatePreviewScrollArea(bounds);
+  lastPreviewZoom = z;
+
+  if(zoomChanged){
+    requestAnimationFrame(()=>{
+      main.scrollLeft = centerContentX * z - main.clientWidth / 2;
+      main.scrollTop = centerContentY * z - main.clientHeight / 2;
+    });
+  }
 }
 
 function outletX(box, outletIndex, rect=null){
@@ -419,6 +727,7 @@ function opts(){
     expandTextBoxes:true,
     textSize:parseFloat(document.querySelector('#textSize').value)||12,
     hersheyFont:document.querySelector('#hersheyFont').value,
+    showObjectOutlines:document.querySelector('#showObjectOutlines').checked,
     moduleColor:document.querySelector('#moduleColor').value,
     moduleWidth:parseFloat(document.querySelector('#moduleWidth').value)||0.25,
     emptyObjectHatch:document.querySelector('#emptyObjectHatch').checked,
@@ -433,21 +742,29 @@ function opts(){
     bandHatchSpacing:parseFloat(document.querySelector('#bandHatchSpacing').value)||4,
     bandHatchAngle:parseFloat(document.querySelector('#bandHatchAngle').value)||45,
     bandHatchCross:document.querySelector('#bandHatchCross').checked,
+    showPatchcoords:document.querySelector('#showPatchcoords').checked,
     cableColor:document.querySelector('#cableColor').value,
     cableWidth:parseFloat(document.querySelector('#cableWidth').value)||0.5,
     autoDashPatchcoords:document.querySelector('#autoDashPatchcoords').checked,
+    enableBackgroundPattern:document.querySelector('#enableBackgroundPattern').checked,
     bgMode:document.querySelector('#bgMode').value,
     bgColor:document.querySelector('#bgColor').value,
     bgAmount:parseFloat(document.querySelector('#bgAmount').value)||30,
     textColor:document.querySelector('#textColor').value,
-    textWidth:parseFloat(document.querySelector('#textWidth').value)||0.25
+    textWidth:parseFloat(document.querySelector('#textWidth').value)||0.25,
+    showTechnicalLabel:document.querySelector('#showTechnicalLabel').checked,
+    technicalPatchName:document.querySelector('#technicalPatchName').value.trim(),
+    technicalAuthor:document.querySelector('#technicalAuthor').value.trim(),
+    technicalDate:document.querySelector('#technicalDate').value,
+    spreadX:parseFloat(document.querySelector('#spreadX').value)||0,
+    spreadY:parseFloat(document.querySelector('#spreadY').value)||0
   };
 }
-function getPatchBounds(patch){
+function getPatchBounds(patch, o, layoutRects=null){
   let minX=0,minY=0,maxX=patch.rect?.[2]||1200,maxY=patch.rect?.[3]||800;
   (patch.boxes||[]).forEach(Box=>{
-    const box=Box.box, r=box.patching_rect||[0,0,80,20], o=opts();
-    const er=expandedRectForText(box,r,o);
+    const box=Box.box, r=box.patching_rect||[0,0,80,20];
+    const er=layoutRectForBox(box,o,layoutRects);
     minX=Math.min(minX,er[0]); minY=Math.min(minY,er[1]);
     maxX=Math.max(maxX,er[0]+er[2]); maxY=Math.max(maxY,er[1]+er[3]);
     const label=labelForBox(box,r,o);
@@ -526,11 +843,11 @@ function emptyHatchingRectForBox(box, r){
   return r;
 }
 
-function rectsForBackgroundMask(patch, o){
+function rectsForBackgroundMask(patch, o, layoutRects=null){
   return (patch.boxes||[]).map(Box => {
     const box = Box.box;
     if(box.maxclass === 'comment') return null;
-    const r = expandedRectForText(box, box.patching_rect || [0,0,80,20], o);
+    const r = layoutRectForBox(box, o, layoutRects);
     return [r[0], r[1], r[2], r[3]];
   }).filter(Boolean);
 }
@@ -555,8 +872,137 @@ function subtractIntervals(baseStart, baseEnd, cuts){
   });
   return intervals;
 }
+function lineRectTInterval(x0, y0, x1, y1, r){
+  let t0 = 0, t1 = 1;
+  const dx = x1 - x0;
+  const dy = y1 - y0;
+  const checks = [
+    [-dx, x0 - r[0]],
+    [ dx, r[0] + r[2] - x0],
+    [-dy, y0 - r[1]],
+    [ dy, r[1] + r[3] - y0]
+  ];
+  for(const c of checks){
+    const p = c[0], q = c[1];
+    if(Math.abs(p) < 1e-9){
+      if(q < 0) return null;
+    } else {
+      const t = q / p;
+      if(p < 0){
+        if(t > t1) return null;
+        if(t > t0) t0 = t;
+      } else {
+        if(t < t0) return null;
+        if(t < t1) t1 = t;
+      }
+    }
+  }
+  if(t1 <= t0) return null;
+  return [Math.max(0, t0), Math.min(1, t1)];
+}
+function seededRandom(seed){
+  let s = seed % 2147483647;
+  if(s <= 0) s += 2147483646;
+  return function(){
+    s = s * 16807 % 2147483647;
+    return (s - 1) / 2147483646;
+  };
+}
+function drawScratchyLine(group, x0, y0, x1, y1, color){
+  const steps = 9;
+  const seed = Math.floor((x0 * 13 + y0 * 17 + x1 * 19 + y1 * 23) * 1000);
+  const rnd = seededRandom(seed);
+  let d = '';
+  for(let i=0; i<=steps; i++){
+    const t = i / steps;
+    const x = lerp(x0, x1, t) + (rnd() - 0.5) * 0.7;
+    const y = lerp(y0, y1, t) + (rnd() - 0.5) * 0.7;
+    d += `${i ? 'L' : 'M'}${x} ${y} `;
+  }
+  group.path(d).fill('none').stroke({width:strokeWidthMM(0.16), color, linecap:'round', linejoin:'round'});
+}
+function drawScratchyBackground(group, o, bounds, rects){
+  const density = Math.max(0, Math.min(1, ((o.bgAmount || 80) - 12) / 68));
+  const color = o.bgColor || '#b8b8b8';
+  const minX = bounds.minX;
+  const minY = bounds.minY;
+  const maxX = bounds.minX + bounds.width;
+  const maxY = bounds.minY + bounds.height;
+  const rnd = seededRandom(424242);
+
+  const area = Math.max(1, (maxX - minX) * (maxY - minY));
+  const count = Math.round(area * (0.0035 + density * 0.014));
+  const baseAngles = [72, 104, 84, 116];
+
+  function pointInAnyRect(x, y){
+    return rects.some(r => x >= r[0] && x <= r[0] + r[2] && y >= r[1] && y <= r[1] + r[3]);
+  }
+
+  function clippedStroke(x0, y0, x1, y1){
+    const cuts = rects
+      .map(r => {
+        const bleed = Math.min(5, Math.max(0, Math.min(r[2], r[3]) * 0.14)) * Math.pow(rnd(), 1.8);
+        const rr = [
+          r[0] + bleed,
+          r[1] + bleed,
+          Math.max(1, r[2] - bleed * 2),
+          Math.max(1, r[3] - bleed * 2)
+        ];
+        return lineRectTInterval(x0, y0, x1, y1, rr);
+      })
+      .filter(Boolean);
+
+    const parts = subtractIntervals(0, 1, cuts);
+    if(!parts.length) return null;
+
+    let best = null;
+    let bestLen = 0;
+    parts.forEach(iv => {
+      const len = iv[1] - iv[0];
+      if(len > bestLen){
+        bestLen = len;
+        best = iv;
+      }
+    });
+    if(!best || bestLen < 0.08) return null;
+    return best;
+  }
+
+  for(let i=0; i<count; i++){
+    const x = minX + rnd() * (maxX - minX);
+    const y = minY + rnd() * (maxY - minY);
+    if(pointInAnyRect(x, y)) continue;
+
+    const angle = (baseAngles[i % baseAngles.length] + (rnd() - 0.5) * 24) * Math.PI / 180;
+    const len = 18 + rnd() * (26 + density * 38);
+    const dx = Math.cos(angle) * len * 0.5;
+    const dy = Math.sin(angle) * len * 0.5;
+
+    const x0 = x - dx;
+    const y0 = y - dy;
+    const x1 = x + dx;
+    const y1 = y + dy;
+
+    const iv = clippedStroke(x0, y0, x1, y1);
+    if(!iv) continue;
+
+    const a = Math.max(0, iv[0]);
+    const b = Math.min(1, iv[1]);
+    if(b <= a) continue;
+
+    drawScratchyLine(
+      group,
+      lerp(x0, x1, a),
+      lerp(y0, y1, a),
+      lerp(x0, x1, b),
+      lerp(y0, y1, b),
+      color
+    );
+  }
+}
 function drawSvgBackground(group, o, bounds, rects){
-  if(o.bgMode === 'none') return;
+  if(!o.enableBackgroundPattern) return;
+  if(o.bgMode === 'scratchy') { drawScratchyBackground(group, o, bounds, rects); return; }
   const spacing = Math.max(4, 92 - (o.bgAmount || 80));
   const color = o.bgColor || '#b8b8b8';
   const minX = bounds.minX;
@@ -608,7 +1054,7 @@ function isJitterObject(box){
   const t = objectTextForType(box);
   return t.startsWith('jit.') || t.includes(' jit.') || t.startsWith('jit_') || t.includes('jit.matrix') || t.includes('jit.gl');
 }
-function patchcoordKind(sourceBox, destBox){
+function patchcoordKind(sourceBox){
 
   if (isJitterObject(sourceBox)) return 'jitter';
   if (isAudioObject(sourceBox)) return 'audio';
@@ -656,19 +1102,18 @@ function polylineLength(points){
   }
   return len;
 }
-function drawSegmentedPatchcoord(group, sx, sy, dx, dy, o, kind){
+function drawSegmentedPatchcoord(group, sx, sy, dx, dy, o, kind, clipRect=null){
   const points = samplePatchcoordPoints(sx, sy, dx, dy, o.curvy, o.curvature);
   const total = polylineLength(points);
   const dash = kind === 'jitter' ? 3 : 7;
-  const gap = kind === 'jitter' ? 4 : 4;
+  const gap = 4;
+  const stroke={width:strokeWidthMM(o.cableWidth),color:o.cableColor,linecap:'round',linejoin:'round'};
   let pos = 0;
 
   while(pos < total){
     const start = pointAlongPolyline(points, pos);
     const end = pointAlongPolyline(points, Math.min(total, pos + dash));
-    group.path(`M${start.x} ${start.y} L${end.x} ${end.y}`)
-      .fill('none')
-      .stroke({width:strokeWidthMM(o.cableWidth),color:o.cableColor,linecap:'round',linejoin:'round'});
+    drawClippedPolyline(group,[start,end],clipRect,stroke);
     pos += dash + gap;
   }
 }
@@ -676,8 +1121,13 @@ function drawSegmentedPatchcoord(group, sx, sy, dx, dy, o, kind){
 function drawSVG(patch){
   document.querySelector('#svg').innerHTML='';
   const o=opts();
-  const patchBounds = getPatchBounds(patch);
-  const backgroundMaskRects = rectsForBackgroundMask(patch, o);
+  const layoutRects = computeLayoutRects(patch, o);
+  const technicalLabel = technicalLabelMetrics(patch, o, layoutRects);
+  const technicalClipRect = technicalLabel ? expandedClipRect(technicalLabel.rect) : null;
+  const patchBounds = boundsIncludingRect(getPatchBounds(patch, o, layoutRects), technicalLabel?.rect);
+  currentPatchBounds = patchBounds;
+  const backgroundMaskRects = rectsForBackgroundMask(patch, o, layoutRects);
+  if(technicalLabel) backgroundMaskRects.push(technicalLabel.rect.slice());
 
   const letterW = 816;
   const letterH = 1056;
@@ -685,7 +1135,7 @@ function drawSVG(patch){
   draw.attr({xmlns:'http://www.w3.org/2000/svg', overflow:'visible'});
   draw.node.style.overflow = 'visible';
   const artwork = draw.group().id('patch2plotter');
-  const backgroundLayer = (o.bgMode !== 'none') ? artwork.group().id('background_pattern') : null;
+  const backgroundLayer = o.enableBackgroundPattern ? artwork.group().id('background_pattern') : null;
   if(backgroundLayer) drawSvgBackground(backgroundLayer, o, patchBounds, backgroundMaskRects);
   const moduleHatching = o.emptyObjectHatch ? artwork.group().id('empty_object_hatching') : null;
   const newobjBarHatching = o.bandHatch ? artwork.group().id('object_label_hatching') : null;
@@ -699,34 +1149,34 @@ function drawSVG(patch){
   }
   const textGroup=artwork.group().id('text');
 
-  (patch.lines||[]).forEach(Line=>{
+  if(o.showPatchcoords) (patch.lines||[]).forEach(Line=>{
     const line=Line.patchline;
     const sourceWrap=(patch.boxes||[]).find(b=>b.box.id===line.source[0]);
     const destWrap=(patch.boxes||[]).find(b=>b.box.id===line.destination[0]);
     if(!sourceWrap||!destWrap) return;
     const s=sourceWrap.box, d=destWrap.box;
-    const sr=expandedRectForText(s, s.patching_rect || [0,0,80,20], o);
-    const dr=expandedRectForText(d, d.patching_rect || [0,0,80,20], o);
+    const sr=layoutRectForBox(s, o, layoutRects);
+    const dr=layoutRectForBox(d, o, layoutRects);
     const sx=outletX(s,line.source[1],sr), sy=sr[1]+sr[3];
     const dx=inletX(d,line.destination[1],dr), dy=dr[1];
     const c=o.curvature;
-    const kind = patchcoordKind(s, d);
+    const kind = patchcoordKind(s);
     const patchcoordGroup = getPatchcoordGroup(kind);
     if(o.autoDashPatchcoords && kind !== 'normal'){
-      drawSegmentedPatchcoord(patchcoordGroup, sx, sy, dx, dy, o, kind);
+      drawSegmentedPatchcoord(patchcoordGroup, sx, sy, dx, dy, o, kind, technicalClipRect);
     } else {
-      const pathData=o.curvy && c>0 ? `M${sx} ${sy} C${sx} ${sy+c} ${dx} ${dy-c} ${dx} ${dy}` : `M${sx} ${sy} L${dx} ${dy}`;
-      patchcoordGroup.path(pathData).fill('none').stroke({width:strokeWidthMM(o.cableWidth),color:o.cableColor,linecap:'round',linejoin:'round'});
+      const points=samplePatchcoordPoints(sx,sy,dx,dy,o.curvy,c);
+      drawClippedPolyline(patchcoordGroup,points,technicalClipRect,{width:strokeWidthMM(o.cableWidth),color:o.cableColor,linecap:'round',linejoin:'round'});
     }
   });
 
   (patch.boxes||[]).forEach(Box=>{
     const box=Box.box, rawR=box.patching_rect||[0,0,80,20];
-    const r=expandedRectForText(box, rawR, o);
+    const r=layoutRectForBox(box, o, layoutRects);
     const isComment=box.maxclass==='comment';
     const radius=(box.maxclass==='message'||box.maxclass==='function')?5:0;
     const label = labelForBox(box, rawR, o);
-    const alwaysHatchClasses = ['panel', 'fpic', 'jit.pwindow'];
+    const alwaysHatchClasses = ['panel', 'fpic', 'jit.pwindow', 'jit.pworld', 'lcd'];
     const hatchIfEmptyClasses = ['newobj', 'message', 'bpatcher'];
     const hatchableEmptyObject =
       alwaysHatchClasses.includes(box.maxclass) ||
@@ -735,107 +1185,180 @@ function drawSVG(patch){
       const hatchRect = emptyHatchingRectForBox(box, r);
       if(hatchRect[2] > 0 && hatchRect[3] > 0) drawHatching(moduleHatching, hatchRect, o);
     }
-    if(!isComment && o.moduleWidth>0){
+    if(o.showObjectOutlines && !isComment && o.moduleWidth>0){
       modules.rect(r[2],r[3]).radius(radius).move(r[0],r[1]).fill('none').stroke({width:strokeWidthMM(o.moduleWidth),color:o.moduleColor});
     }
-    if(box.maxclass==='newobj' && o.moduleWidth>0){
+    if(o.showObjectOutlines && box.maxclass==='newobj' && o.moduleWidth>0){
       drawNewObjBorderBands(modules, newobjBarHatching, r, o);
     }
-    if(box.maxclass==='button'){
+    if(o.showObjectOutlines && box.maxclass==='button'){
       const w=o.moduleWidth;
       modules.circle(r[2]/1.5).center(r[0]+r[2]/2,r[1]+r[3]/2).fill('none').stroke({width:strokeWidthMM(w),color:o.moduleColor});
     }
-    if(box.maxclass==='toggle'){
+    if(o.showObjectOutlines && box.maxclass==='toggle'){
       const border=r[2]*0.25, w=o.moduleWidth;
       modules.line(r[0]+border,r[1]+border,r[0]+r[2]-border,r[1]+r[3]-border).stroke({width:strokeWidthMM(w),color:o.moduleColor});
       modules.line(r[0]+r[2]-border,r[1]+border,r[0]+border,r[1]+r[3]-border).stroke({width:strokeWidthMM(w),color:o.moduleColor});
     }
     let textOffset=(box.maxclass==='number'||box.maxclass==='flonum'||box.maxclass==='number~')?14:4;
     if(label && o.showText){
-      const textY = r[1] + Math.max(4, (r[3] - estimateStrokeTextHeight(label,o.textSize)) / 2) + 2;
+      const capsYOffset = o.forceCaps ? 2 : 0;
+      const multilineYOffset = !o.forceCaps && label.includes('\n') ? 3 : 0;
+      const textY = r[1] + Math.max(4, (r[3] - estimateStrokeTextHeight(label,o.textSize)) / 2) + 2 + capsYOffset + multilineYOffset;
       drawStrokeText(textGroup,label,r[0]+textOffset,textY,o.textSize,o.textColor,o.textWidth,o.hersheyFont);
     }
-    if(box.maxclass==='number' || box.maxclass==='flonum'){
+    if(o.showObjectOutlines && (box.maxclass==='number' || box.maxclass==='flonum')){
       const cy=r[1]+r[3]/2;
       modules.path(`M${r[0]+4} ${cy-5} L${r[0]+10} ${cy} L${r[0]+4} ${cy+5}`).fill('none').stroke({width:strokeWidthMM(o.moduleWidth),color:o.moduleColor,linejoin:'round'});
     }
-    if(box.maxclass==='number~'){
+    if(o.showObjectOutlines && box.maxclass==='number~'){
       drawStrokeText(modules,'~',r[0]+4,r[1]+2,12,o.moduleColor,o.moduleWidth,o.hersheyFont);
     }
   });
+
+  if(technicalLabel){
+    const technicalGroup=artwork.group().id('technical_label');
+    drawTechnicalLabel(technicalGroup,technicalLabel,o);
+  }
+
   applyPreviewZoom();
   return draw;
 }
 
 function resetControls(){
-  const set = (id, value) => {
-    const el = document.querySelector('#' + id);
-    if(!el) return;
-    if(el.type === 'checkbox') el.checked = !!value;
-    else el.value = value;
-  };
+  document.querySelectorAll('input, select').forEach(el => {
+    if(el.id === 'fileInput') return;
+    if(el.type === 'checkbox') el.checked = el.dataset.defaultChecked === '1';
+    else el.value = el.dataset.defaultValue ?? el.defaultValue;
+  });
 
-  set('previewZoom', 100);
-
-  set('moduleColor', '#000000');
-  set('moduleWidth', 0.25);
-
-  set('showText', true);
-  set('wrapText', false);
-  set('forceCaps', false);
-  set('hersheyFont', 'emsTech');
-  set('textSize', 9);
-  set('textWidth', 0.25);
-  set('textColor', '#000000');
-
-  set('cableColor', '#000000');
-  set('cableWidth', 0.5);
-  set('curvy', true);
-  set('curvature', 12);
-  set('autoDashPatchcoords', false);
-
-  set('bgMode', 'none');
-  set('bgColor', '#b8b8b8');
-  set('bgAmount', 80);
-
-  set('emptyObjectHatch', false);
-  set('hatchColor', '#000000');
-  set('hatchWidth', 0.25);
-  set('hatchSpacing', 4);
-  set('hatchAngle', 45);
-  set('hatchCross', false);
-
-  set('bandHatch', false);
-  set('bandHatchColor', '#000000');
-  set('bandHatchWidth', 0.25);
-  set('bandHatchSpacing', 4);
-  set('bandHatchAngle', 45);
-  set('bandHatchCross', false);
-
+  updateSpreadLabels();
   setHatchControlsEnabled();
-  if(patch) draw = drawSVG(patch);
-  applyPreviewZoom();
+  if(patch) redraw();
+  else applyPreviewZoom();
+}
+
+function setControlsEnabled(ids, enabled){
+  ids.forEach(id => {
+    const el = document.querySelector('#' + id);
+    if(el) el.disabled = !enabled;
+  });
 }
 
 function setHatchControlsEnabled(){
-  const objectOn = document.querySelector('#emptyObjectHatch').checked;
-  ['hatchColor','hatchWidth','hatchSpacing','hatchAngle','hatchCross'].forEach(id=>{
-    const el=document.querySelector('#'+id); if(el) el.disabled=!objectOn;
-  });
-  const bandOn = document.querySelector('#bandHatch').checked;
-  ['bandHatchColor','bandHatchWidth','bandHatchSpacing','bandHatchAngle','bandHatchCross'].forEach(id=>{
-    const el=document.querySelector('#'+id); if(el) el.disabled=!bandOn;
-  });
-  const curvyOn = document.querySelector('#curvy').checked;
-  const curvature = document.querySelector('#curvature');
-  if(curvature) curvature.disabled = !curvyOn;
-  const bgOn = document.querySelector('#bgMode').value !== 'none';
-  ['bgColor','bgAmount'].forEach(id=>{
-    const el=document.querySelector('#'+id); if(el) el.disabled=!bgOn;
+  const textOn = document.querySelector('#showText').checked;
+  const outlinesOn = document.querySelector('#showObjectOutlines').checked;
+  const patchcoordsOn = document.querySelector('#showPatchcoords').checked;
+  const curvyOn = patchcoordsOn && document.querySelector('#curvy').checked;
+  const backgroundOn = document.querySelector('#enableBackgroundPattern').checked;
+  const emptyHatchOn = document.querySelector('#emptyObjectHatch').checked;
+  const bandHatchOn = document.querySelector('#bandHatch').checked;
+
+  setControlsEnabled(['technicalPatchName','technicalAuthor','technicalDate'], document.querySelector('#showTechnicalLabel').checked);
+  setControlsEnabled(['wrapText','forceCaps','hersheyFont','textSize','textWidth','textColor'], textOn);
+  setControlsEnabled(['moduleColor','moduleWidth'], outlinesOn);
+  setControlsEnabled(['cableColor','cableWidth','curvy','autoDashPatchcoords'], patchcoordsOn);
+  setControlsEnabled(['curvature'], curvyOn);
+  setControlsEnabled(['bgMode','bgColor','bgAmount'], backgroundOn);
+  setControlsEnabled(['hatchColor','hatchWidth','hatchSpacing','hatchAngle','hatchCross'], emptyHatchOn);
+  setControlsEnabled(['bandHatchColor','bandHatchWidth','bandHatchSpacing','bandHatchAngle','bandHatchCross'], bandHatchOn);
+}
+
+function clampControlNumber(value, control){
+  let n = Number(value);
+  if(!Number.isFinite(n)) n = Number(control.value) || 0;
+  const min = control.min === '' ? -Infinity : Number(control.min);
+  const max = control.max === '' ? Infinity : Number(control.max);
+  return Math.min(max, Math.max(min, n));
+}
+
+function updateSpreadLabels(){
+  const pairs = [['spreadX','spreadXValue'], ['spreadY','spreadYValue']];
+  pairs.forEach(([sliderId, valueId]) => {
+    const slider = document.querySelector('#' + sliderId);
+    const value = document.querySelector('#' + valueId);
+    if(slider && value && document.activeElement !== value) value.value = slider.value;
   });
 }
 
-function redraw(){ setHatchControlsEnabled(); if(patch) draw=drawSVG(patch); }
+function capturePreviewState(){
+  const viewport = document.querySelector('#svg');
+  return viewport ? { left: viewport.scrollLeft, top: viewport.scrollTop } : { left: 0, top: 0 };
+}
+
+function restorePreviewState(state, generation){
+  const viewport = document.querySelector('#svg');
+  if(!viewport || !state || generation !== previewRestoreGeneration) return;
+  viewport.scrollLeft = state.left;
+  viewport.scrollTop = state.top;
+}
+
+function redraw(){
+  updateSpreadLabels();
+  setHatchControlsEnabled();
+  if(!patch) return;
+
+  // Capture once for a whole burst of input/change events. This prevents the
+  // second event from saving the temporary 0,0 position while the SVG is being rebuilt.
+  if(!pendingPreviewState) pendingPreviewState = capturePreviewState();
+  if(pendingRedrawFrame !== null) return;
+
+  pendingRedrawFrame = requestAnimationFrame(() => {
+    pendingRedrawFrame = null;
+    const saved = pendingPreviewState || capturePreviewState();
+    pendingPreviewState = null;
+    const generation = ++previewRestoreGeneration;
+
+    draw = drawSVG(patch);
+
+    // Wait for SVG.js, transforms, spacer sizing and browser layout to settle.
+    requestAnimationFrame(() => {
+      restorePreviewState(saved, generation);
+      requestAnimationFrame(() => restorePreviewState(saved, generation));
+    });
+  });
+}
+
+function initializeControlDefaults(){
+  document.querySelectorAll('input, select').forEach(el => {
+    if(el.id === 'fileInput') return;
+    if(el.type === 'checkbox') el.dataset.defaultChecked = el.checked ? '1' : '0';
+    else el.dataset.defaultValue = el.value;
+  });
+}
+
+function restoreControlDefault(el){
+  if(!el || el.disabled) return;
+
+  if(el.id === 'spreadXValue' || el.id === 'spreadYValue'){
+    const slider = document.querySelector(el.id === 'spreadXValue' ? '#spreadX' : '#spreadY');
+    if(slider){
+      slider.value = slider.dataset.defaultValue ?? slider.defaultValue;
+      el.value = slider.value;
+    }
+    redraw();
+    return;
+  }
+
+  if(el.type === 'checkbox') el.checked = el.dataset.defaultChecked === '1';
+  else el.value = el.dataset.defaultValue ?? el.defaultValue;
+
+  if(el.id === 'spreadX' || el.id === 'spreadY') updateSpreadLabels();
+  if(el.id === 'previewZoom') applyPreviewZoom();
+  else redraw();
+}
+
+function enableDoubleClickDefaults(){
+  document.querySelectorAll('input, select').forEach(el => {
+    if(el.id === 'fileInput') return;
+    el.title = el.title ? `${el.title} · Double-click to reset` : 'Double-click to reset';
+    el.addEventListener('dblclick', event => {
+      event.preventDefault();
+      event.stopPropagation();
+      restoreControlDefault(el);
+    });
+  });
+}
 
 document.querySelector('#reset').addEventListener('click', resetControls);
 
@@ -847,16 +1370,56 @@ document.querySelector('#fileInput').addEventListener('change',()=>{
   const file=document.querySelector('#fileInput').files[0]; if(!file)return;
   const nameEl=document.querySelector('#fileName');
   if(nameEl) nameEl.textContent=file.name;
+  currentPatchFileName=file.name.replace(/\.(maxpat|maxhelp|json)$/i,'');
+  const technicalName=document.querySelector('#technicalPatchName');
+  if(technicalName) technicalName.value=currentPatchFileName;
+  const technicalDate=document.querySelector('#technicalDate');
+  if(technicalDate) technicalDate.value=fileDateValue(file);
   const reader=new FileReader();
-  reader.onloadend=()=>{ const json=JSON.parse(reader.result); patch=json.patcher||json; draw=drawSVG(patch); };
+  reader.onloadend=()=>{
+    try {
+      const json=JSON.parse(reader.result);
+      patch=json.patcher||json;
+      draw=drawSVG(patch);
+    } catch(error) {
+      console.error(error);
+      alert('Could not read this Max patch.');
+    }
+  };
   reader.readAsText(file);
 });
-['curvy','curvature','autoDashPatchcoords','bgMode','bgColor','bgAmount','showText','wrapText','forceCaps','hersheyFont','textSize','moduleColor','moduleWidth','emptyObjectHatch','hatchColor','hatchWidth','hatchSpacing','hatchAngle','hatchCross','bandHatch','bandHatchColor','bandHatchWidth','bandHatchSpacing','bandHatchAngle','bandHatchCross','cableColor','cableWidth','textColor','textWidth'].forEach(id=>{
-  const el=document.querySelector('#'+id); el.addEventListener('change',redraw); el.addEventListener('input',redraw);
+['showTechnicalLabel','technicalPatchName','technicalAuthor','technicalDate','showObjectOutlines','showPatchcoords','enableBackgroundPattern','curvy','curvature','autoDashPatchcoords','bgMode','bgColor','bgAmount','showText','wrapText','forceCaps','hersheyFont','textSize','moduleColor','moduleWidth','emptyObjectHatch','hatchColor','hatchWidth','hatchSpacing','hatchAngle','hatchCross','bandHatch','bandHatchColor','bandHatchWidth','bandHatchSpacing','bandHatchAngle','bandHatchCross','cableColor','cableWidth','textColor','textWidth','spreadX','spreadY'].forEach(id=>{
+  const el=document.querySelector('#'+id);
+  if(!el) return;
+  el.addEventListener('change',redraw);
+  el.addEventListener('input',redraw);
 });
+
+[['spreadX','spreadXValue'], ['spreadY','spreadYValue']].forEach(([sliderId, valueId]) => {
+  const slider = document.querySelector('#' + sliderId);
+  const value = document.querySelector('#' + valueId);
+  if(!slider || !value) return;
+
+  value.addEventListener('input', () => {
+    slider.value = clampControlNumber(value.value, slider);
+    redraw();
+  });
+  value.addEventListener('change', () => {
+    slider.value = clampControlNumber(value.value, slider);
+    value.value = slider.value;
+    redraw();
+  });
+});
+
+const technicalDateInput=document.querySelector('#technicalDate');
+if(technicalDateInput && !technicalDateInput.value){
+  const now=new Date();
+  technicalDateInput.value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+}
+initializeControlDefaults();
+enableDoubleClickDefaults();
+updateSpreadLabels();
 document.querySelector('#previewZoom').addEventListener('input',applyPreviewZoom);
-document.querySelector('#zoomIn').addEventListener('click',()=>{const el=document.querySelector('#previewZoom'); el.value=Math.min(300,parseFloat(el.value)+10); applyPreviewZoom();});
-document.querySelector('#zoomOut').addEventListener('click',()=>{const el=document.querySelector('#previewZoom'); el.value=Math.max(25,parseFloat(el.value)-10); applyPreviewZoom();});
 
 let pinchStartDistance = null;
 let pinchStartZoom = null;
@@ -895,6 +1458,11 @@ viewport.addEventListener('wheel', (e)=>{
 }, {passive:false});
 
 setHatchControlsEnabled();
+document.querySelectorAll('.section-enable').forEach(label=>{
+  label.addEventListener('click', e=>e.stopPropagation());
+  const input=label.querySelector('input');
+  if(input) input.addEventListener('click', e=>e.stopPropagation());
+});
 document.querySelector('#export').addEventListener('click',()=>{
   if(!draw) return alert('Read a .maxpat first');
   const blob=new Blob([draw.svg()],{type:'image/svg+xml'});
@@ -902,8 +1470,10 @@ document.querySelector('#export').addEventListener('click',()=>{
   a.download='patch2plotter.svg';
   a.href=URL.createObjectURL(blob);
   a.click();
-  URL.revokeObjectURL(a.href);
+  setTimeout(() => URL.revokeObjectURL(a.href), 0);
 });
+
+
 </script>
 </body>
 </html>
