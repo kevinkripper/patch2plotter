@@ -2,7 +2,7 @@
 
 Convert Max patches into layered, plotter-friendly SVGs.
 
-Load a `.maxpat` or `.maxhelp` to generate a vector interpretation of your patch. Customize patchcords, typography, hatching, backgrounds, and more to give your patch a unique visual style.
+Load a `.maxpat`, `.maxhelp` or `.genjit` to generate a vector interpretation of your patch. Customize patchcords, typography, hatching, backgrounds, and more to give your patch a unique visual style.
 
 ## 
 → [Try it here](https://kevinkripper.github.io/patch2plotter/) or download the `index.html` and run it locally.
