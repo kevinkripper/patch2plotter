@@ -1284,21 +1284,42 @@ function drawSVG(patch){
   const artwork = draw.group().id('patch2plotter');
   const backgroundLayer = o.enableBackgroundPattern ? artwork.group().id('background_pattern') : null;
   if(backgroundLayer) drawSvgBackground(backgroundLayer, o, patchBounds, backgroundMaskRects);
-  const moduleHatching = o.emptyObjectHatch ? artwork.group().id('empty_object_hatching') : null;
-  const newobjBarHatching = o.bandHatch ? artwork.group().id('object_label_hatching') : null;
-  const modules=artwork.group().id('object_outlines');
-  const patchcoords=artwork.group().id('patchcoords');
+
+  // Create optional SVG groups only when they receive their first drawable.
+  let moduleHatching = null;
+  let newobjBarHatching = null;
+  let modules = null;
+  let patchcoords = null;
+  let textGroup = null;
+  let codeboxTextGroup = null;
   const patchcoordGroups = {};
+
+  function getModuleHatching(){
+    if(!moduleHatching) moduleHatching = artwork.group().id('empty_object_hatching');
+    return moduleHatching;
+  }
+  function getNewobjBarHatching(){
+    if(!newobjBarHatching) newobjBarHatching = artwork.group().id('object_label_hatching');
+    return newobjBarHatching;
+  }
+  function getModules(){
+    if(!modules) modules = artwork.group().id('object_outlines');
+    return modules;
+  }
+  function getTextGroup(){
+    if(!textGroup) textGroup = artwork.group().id('text');
+    return textGroup;
+  }
+  function getCodeboxTextGroup(){
+    if(!codeboxTextGroup) codeboxTextGroup = artwork.group().id('codebox_text');
+    return codeboxTextGroup;
+  }
   function getPatchcoordGroup(kind){
+    if(!patchcoords) patchcoords = artwork.group().id('patchcoords');
     const id = kind === 'audio' ? 'msp' : (kind === 'jitter' ? 'jitter' : 'control');
     if(!patchcoordGroups[id]) patchcoordGroups[id] = patchcoords.group().id(id);
     return patchcoordGroups[id];
   }
-  const textGroup=artwork.group().id('text');
-  const codeboxTextGroup =
-    o.enableCodebox && patchHasCodebox(patch)
-      ? artwork.group().id('codebox_text')
-      : null;
 
   if(o.showPatchcoords) (patch.lines||[]).forEach(Line=>{
     const line=Line.patchline;
@@ -1333,47 +1354,52 @@ function drawSVG(patch){
       alwaysHatchClasses.includes(box.maxclass) ||
       (hatchIfEmptyClasses.includes(box.maxclass) && !label) ||
       (isCodeboxObject(box) && !o.enableCodebox);
-    if(!isComment && moduleHatching && hatchableEmptyObject) {
+    if(!isComment && o.emptyObjectHatch && hatchableEmptyObject) {
       const hatchRect = emptyHatchingRectForBox(box, r);
       if(hatchRect[2] > 0 && hatchRect[3] > 0) {
         const objectId = svgSafeId(box.id || `object-${boxIndex + 1}`);
-        const objectHatching = moduleHatching.group().id(`empty_${objectId}`);
+        const objectHatching = getModuleHatching().group().id(`empty_${objectId}`);
         const objectHatchOptions = emptyHatchOptionsForBox(box, boxIndex, o);
         drawHatching(objectHatching, hatchRect, objectHatchOptions);
       }
     }
     if(o.showObjectOutlines && !isComment && o.moduleWidth>0){
-      modules.rect(r[2],r[3]).radius(radius).move(r[0],r[1]).fill('none').stroke({width:strokeWidthMM(o.moduleWidth),color:o.moduleColor});
+      getModules().rect(r[2],r[3]).radius(radius).move(r[0],r[1]).fill('none').stroke({width:strokeWidthMM(o.moduleWidth),color:o.moduleColor});
     }
     if(o.showObjectOutlines && box.maxclass==='newobj' && o.moduleWidth>0){
-      drawNewObjBorderBands(modules, newobjBarHatching, r, o);
+      drawNewObjBorderBands(
+        getModules(),
+        o.bandHatch ? getNewobjBarHatching() : null,
+        r,
+        o
+      );
     }
     if(o.showObjectOutlines && box.maxclass==='button'){
       const w=o.moduleWidth;
-      modules.circle(r[2]/1.5).center(r[0]+r[2]/2,r[1]+r[3]/2).fill('none').stroke({width:strokeWidthMM(w),color:o.moduleColor});
+      getModules().circle(r[2]/1.5).center(r[0]+r[2]/2,r[1]+r[3]/2).fill('none').stroke({width:strokeWidthMM(w),color:o.moduleColor});
     }
     if(o.showObjectOutlines && box.maxclass==='toggle'){
       const border=r[2]*0.25, w=o.moduleWidth;
-      modules.line(r[0]+border,r[1]+border,r[0]+r[2]-border,r[1]+r[3]-border).stroke({width:strokeWidthMM(w),color:o.moduleColor});
-      modules.line(r[0]+r[2]-border,r[1]+border,r[0]+border,r[1]+r[3]-border).stroke({width:strokeWidthMM(w),color:o.moduleColor});
+      getModules().line(r[0]+border,r[1]+border,r[0]+r[2]-border,r[1]+r[3]-border).stroke({width:strokeWidthMM(w),color:o.moduleColor});
+      getModules().line(r[0]+r[2]-border,r[1]+border,r[0]+border,r[1]+r[3]-border).stroke({width:strokeWidthMM(w),color:o.moduleColor});
     }
     let textOffset=(box.maxclass==='number'||box.maxclass==='flonum'||box.maxclass==='number~')?14:4;
     if(isCodeboxObject(box)){
-      if(codeboxTextGroup && label){
-        drawStrokeText(codeboxTextGroup,label,r[0]+6,r[1]+6,o.codeboxTextSize,o.codeboxTextColor,o.codeboxTextWidth,o.codeboxFont);
+      if(o.enableCodebox && label){
+        drawStrokeText(getCodeboxTextGroup(),label,r[0]+6,r[1]+6,o.codeboxTextSize,o.codeboxTextColor,o.codeboxTextWidth,o.codeboxFont);
       }
     } else if(label && o.showText){
       const capsYOffset = o.forceCaps ? 2 : 0;
       const multilineYOffset = !o.forceCaps && label.includes('\n') ? 3 : 0;
       const textY = r[1] + Math.max(4, (r[3] - estimateStrokeTextHeight(label,o.textSize)) / 2) + 2 + capsYOffset + multilineYOffset;
-      drawStrokeText(textGroup,label,r[0]+textOffset,textY,o.textSize,o.textColor,o.textWidth,o.hersheyFont);
+      drawStrokeText(getTextGroup(),label,r[0]+textOffset,textY,o.textSize,o.textColor,o.textWidth,o.hersheyFont);
     }
     if(o.showObjectOutlines && (box.maxclass==='number' || box.maxclass==='flonum')){
       const cy=r[1]+r[3]/2;
-      modules.path(`M${r[0]+4} ${cy-5} L${r[0]+10} ${cy} L${r[0]+4} ${cy+5}`).fill('none').stroke({width:strokeWidthMM(o.moduleWidth),color:o.moduleColor,linejoin:'round'});
+      getModules().path(`M${r[0]+4} ${cy-5} L${r[0]+10} ${cy} L${r[0]+4} ${cy+5}`).fill('none').stroke({width:strokeWidthMM(o.moduleWidth),color:o.moduleColor,linejoin:'round'});
     }
     if(o.showObjectOutlines && box.maxclass==='number~'){
-      drawStrokeText(modules,'~',r[0]+4,r[1]+2,12,o.moduleColor,o.moduleWidth,o.hersheyFont);
+      drawStrokeText(getModules(),'~',r[0]+4,r[1]+2,12,o.moduleColor,o.moduleWidth,o.hersheyFont);
     }
   });
 
