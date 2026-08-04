@@ -1945,7 +1945,7 @@ function setControlsEnabled(ids, enabled){
 function codeboxObjectName(box){
   const maxclass = String(box?.maxclass || '').trim().toLowerCase();
   const textName = String(box?.text || '').trim().split(/\s+/)[0].toLowerCase();
-  return maxclass === 'codebox' ? 'codebox' : textName;
+  return maxclass.includes('codebox') ? maxclass : textName;
 }
 
 function isCodeboxObject(box){
