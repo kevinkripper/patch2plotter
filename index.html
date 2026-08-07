@@ -50,7 +50,7 @@ var SVG=function(){"use strict";const t={},e=[];function n(e,i){if(Array.isArray
       --ink:#161616;
       --ink-soft:#444;
       --muted:#737373;
-      --line:#c9c9c4;
+      --line:#aaaaa6;
       --line-soft:#deded9;
       --line-dark:#969690;
       --blue:#363636;
@@ -539,7 +539,31 @@ var SVG=function(){"use strict";const t={},e=[];function n(e,i){if(Array.isArray
       </div>
     </details>
 
-    <details class="panel patchcoords-panel" open>
+    <details class="panel">
+      <summary class="section-title"><span class="section-label">Background</span></summary>
+      <label class="field compact"><span>Color</span><input id="backgroundColor" type="color" value="#ffffff" /></label>
+    </details>
+
+    <details class="panel">
+      <summary class="section-title"><span class="section-label">Background Pattern</span><label class="section-enable"><input id="enableBackgroundPattern" type="checkbox" /> Enable</label></summary>
+      <div class="bg-row">
+        <label class="field compact"><span>Pattern</span>
+          <select id="bgMode">
+            <option value="dots" selected>Dots</option>
+            <option value="grid">Grid</option>
+            <option value="lines">Lines</option>
+            <option value="scratchy">Scratchy</option>
+          </select>
+        </label>
+        <label class="field compact"><span>Pattern Color</span><input id="bgColor" type="color" value="#000000" /></label>
+      </div>
+      <div class="bg-amount-row">
+        <span>Amount</span>
+        <input id="bgAmount" type="range" min="12" max="80" step="1" value="80" />
+      </div>
+    </details>
+
+    <details class="panel patchcoords-panel">
       <summary class="section-title"><span class="section-label">Patchcoords</span><label class="section-enable"><input id="showPatchcoords" type="checkbox" checked /> Enable</label></summary>
       <div class="patchcoords-layout">
         <div class="patchcoords-top-row">
@@ -556,7 +580,7 @@ var SVG=function(){"use strict";const t={},e=[];function n(e,i){if(Array.isArray
       </div>
     </details>
 
-    <details class="panel">
+    <details class="panel" open>
       <summary class="section-title"><span class="section-label">Text</span><label class="section-enable"><input id="showText" type="checkbox" checked /> Enable</label></summary>
       <div class="row text-top-row">
         <label class="field"><span>Hershey font</span>
@@ -670,23 +694,9 @@ var SVG=function(){"use strict";const t={},e=[];function n(e,i){if(Array.isArray
 
     </details>
 
-    <details class="panel">
-      <summary class="section-title"><span class="section-label">Background Pattern</span><label class="section-enable"><input id="enableBackgroundPattern" type="checkbox" /> Enable</label></summary>
-      <div class="bg-row">
-        <label class="field compact"><span>Pattern</span>
-          <select id="bgMode">
-            <option value="dots" selected>Dots</option>
-            <option value="grid">Grid</option>
-            <option value="scratchy">Scratchy</option>
-          </select>
-        </label>
-        <label class="field compact"><span>Color</span><input id="bgColor" type="color" value="#000000" /></label>
-      </div>
-      <div class="bg-amount-row">
-        <span>Amount</span>
-        <input id="bgAmount" type="range" min="12" max="80" step="1" value="80" />
-      </div>
-    </details>
+
+
+
 
     <details class="panel" open>
       <summary class="section-title"><span class="section-label">Technical Label</span><label class="section-enable"><input id="showTechnicalLabel" type="checkbox" checked /> Enable</label></summary>
@@ -1361,6 +1371,7 @@ function opts(){
     enableBackgroundPattern:document.querySelector('#enableBackgroundPattern').checked,
     bgMode:document.querySelector('#bgMode').value,
     bgColor:document.querySelector('#bgColor').value,
+    backgroundColor:document.querySelector('#backgroundColor').value,
     bgAmount:parseFloat(document.querySelector('#bgAmount').value)||30,
     textColor:document.querySelector('#textColor').value,
     textWidth:parseFloat(document.querySelector('#textWidth').value)||0.25,
@@ -1687,6 +1698,19 @@ function drawSvgBackground(group, o, bounds, rects){
     }
   }
 
+  if(o.bgMode === 'lines'){
+    const lineSpacing = Math.max(2, spacing / 2);
+    const lineStartY = Math.floor(minY / lineSpacing) * lineSpacing;
+    for(let y=lineStartY; y<=maxY; y+=lineSpacing){
+      const cuts = rects
+        .filter(r => y >= r[1] && y <= r[1]+r[3])
+        .map(r => [r[0], r[0]+r[2]]);
+      subtractIntervals(minX, maxX, cuts).forEach(iv => {
+        group.line(iv[0], y, iv[1], y).stroke({width:strokeWidthMM(0.12), color, linecap:'butt'});
+      });
+    }
+  }
+
   if(o.bgMode === 'dots'){
     const dotR = Math.max(0.45, spacing * 0.025);
     for(let x=startX; x<=maxX; x+=spacing){
@@ -1789,7 +1813,18 @@ function drawSVG(patch){
   const draw=SVG().addTo('#svg').size('215.9mm','279.4mm').viewbox(0,0,letterW,letterH);
   draw.attr({xmlns:'http://www.w3.org/2000/svg', overflow:'visible'});
   draw.node.style.overflow = 'visible';
+  draw.node.style.backgroundColor = 'transparent';
   const artwork = draw.group().id('patch2plotter');
+
+  const backgroundColor = (o.backgroundColor || '#ffffff').toLowerCase();
+  if(backgroundColor !== '#ffffff'){
+    const backgroundGroup = artwork.group().id('background');
+    backgroundGroup.rect(patchBounds.width, patchBounds.height)
+      .move(patchBounds.minX, patchBounds.minY)
+      .fill(backgroundColor)
+      .stroke('none');
+  }
+
   const backgroundLayer = o.enableBackgroundPattern ? artwork.group().id('background_pattern') : null;
   if(backgroundLayer) drawSvgBackground(backgroundLayer, o, patchBounds, backgroundMaskRects);
 
@@ -1991,6 +2026,7 @@ function setHatchControlsEnabled(){
   setControlsEnabled(['cableColor','cableWidth','curvy','autoDashPatchcoords'], patchcoordsOn);
   setControlsEnabled(['curvature'], curvyOn);
   setControlsEnabled(['bgMode','bgColor','bgAmount'], backgroundOn);
+  setControlsEnabled(['backgroundColor'], true);
   updateEmptyHatchRandomUI();
   setControlsEnabled(['bandHatchColor','bandHatchWidth','bandHatchSpacing','bandHatchAngle','bandHatchCross'], bandHatchOn);
   updateCodeboxUI();
@@ -2192,7 +2228,7 @@ if(technicalIncludeExtension){
 
 ['showTechnicalLabel','technicalPatchName','technicalIncludeExtension','technicalAuthor','technicalDate','technicalDateFormat',
 'enableCodebox','codeboxFont','codeboxTextSize','codeboxTextWidth','codeboxTextColor',
-'showObjectOutlines','showPatchcoords','enableBackgroundPattern','curvy','curvature','autoDashPatchcoords','bgMode','bgColor','bgAmount','showText','wrapText','forceCaps','hersheyFont','textSize','moduleColor','moduleWidth','emptyObjectHatch','hatchColor','hatchWidth','hatchSpacing','hatchAngle','hatchCross','bandHatch','bandHatchColor','bandHatchWidth','bandHatchSpacing','bandHatchAngle','bandHatchCross','cableColor','cableWidth','textColor','textWidth'].forEach(id=>{
+'showObjectOutlines','showPatchcoords','enableBackgroundPattern','curvy','curvature','autoDashPatchcoords','bgMode','bgColor','backgroundColor','bgAmount','showText','wrapText','forceCaps','hersheyFont','textSize','moduleColor','moduleWidth','emptyObjectHatch','hatchColor','hatchWidth','hatchSpacing','hatchAngle','hatchCross','bandHatch','bandHatchColor','bandHatchWidth','bandHatchSpacing','bandHatchAngle','bandHatchCross','cableColor','cableWidth','textColor','textWidth'].forEach(id=>{
   const el=document.querySelector('#'+id);
   if(!el) return;
   el.addEventListener('change',redraw);
